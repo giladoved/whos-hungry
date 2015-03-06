@@ -17,6 +17,7 @@
 #import "AFHTTPRequestOperation.h"
 #import "UpDownVoteView.h"
 #import "SWTableViewCell.h"
+#import "GooglePlacesObject.h"
 #import "RSVPFriendsTableViewCell.h"
 
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
@@ -57,6 +58,8 @@
 @property BOOL isLobbyDone;
 @property NSMutableArray* totalVoteArray;
 @property NSMutableArray* voteStatusArray;
+
+@property (nonatomic, strong) GooglePlacesObject * chosenPlace;
 
 @property BOOL isInitWithHootLobby;
 @property BOOL isExpirationUpdated;

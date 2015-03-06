@@ -729,7 +729,26 @@ typedef enum accessType
     if([segue.identifier isEqualToString:@"suggestaplace"]) {
         RestaurantsViewControllerGeneric *restVC = (RestaurantsViewControllerGeneric *)segue.destinationViewController;
         restVC.voteTypes = @[_currentLobby.voteType];
+        restVC.onCompletion = ^{
+            if (self.chosenPlace == nil) {
+                self.chosenPlace = [self loadRestaurantObjectWithKey:@"chosenRestaurant"];
+                [self addChosenRestaurant];
+            } else {
+                NSLog(@"COME ON MAN< YOU ALREADY SUGGESTED A PLACE!!!");
+            }
+        };
     }
+}
+
+-(void) addChosenRestaurant  {
+    NSLog(@"here's the chosen place: %@", self.chosenPlace.name);
+}
+
+- (GooglePlacesObject *)loadRestaurantObjectWithKey:(NSString *)key {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSData *encodedObject = [defaults objectForKey:key];
+    GooglePlacesObject *object = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
+    return object;
 }
 
 #pragma mark - Table View methods
