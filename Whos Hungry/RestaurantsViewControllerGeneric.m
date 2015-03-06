@@ -11,6 +11,9 @@
 #import "AFNetworking.h"
 
 #define GOOGLE_API_KEY @"AIzaSyAdB2MtdRCGDZNfIcd-uR22hkmCmniA6Oc"
+#define GOOGLE_API_KEY_TWO @"AIzaSyBBQSs-ALwZ3Za7nioFPYXsByMDsMFq-68"
+#define GOOGLE_API_KEY_THREE @"AIzaSyA6gixyCg9D-9nEJ8q7PQJiJ9Nk5LzcltI"
+#define GOOGLE_API_KEY_FOUR @"AIzaSyDF0gj_1xGofM8BriMNH-uHbNYBVjI3g70"
 #define LOBBY_KEY  @"currentlobby"
 
 @interface RestaurantsViewControllerGeneric () {
@@ -79,7 +82,7 @@
     NSDictionary *parameters =
                                 @{@"location": [NSString stringWithFormat:@"%f,%f", self.currentCoordinate.latitude, self.currentCoordinate.longitude],
                                  @"types":googleTypes,
-                                 @"key":GOOGLE_API_KEY,
+                                 @"key":GOOGLE_API_KEY_FOUR,
                                   @"query":keywords,
                                   @"radius":@5000
                                  };

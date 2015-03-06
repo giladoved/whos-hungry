@@ -1,14 +1,14 @@
 //
 //  GooglePlacesObject.h
-// 
+//
 // Copyright 2011 Joshua Drew
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,25 +22,27 @@
 
 @interface GooglePlacesObject : NSObject
 {
-    NSString    *placesId;
-    NSString    *reference;
-    NSString    *name;
-    NSString    *icon;
-    NSString    *rating;
-    NSString    *vicinity;
-    NSArray     *type; //array
-    NSString    *url;
-    NSArray     *addressComponents; //array
-    NSString    *formattedAddress;
-    NSString    *formattedPhoneNumber;
-    NSString    *website;
-    NSString    *internationalPhoneNumber;
-    NSString    *searchTerms;
-    CLLocationCoordinate2D coordinate;
-    //NEW
-    NSString    *distanceInFeetString;
-    NSString    *distanceInMilesString;
-    
+    /*
+     NSString    *placesId;
+     NSString    *reference;
+     NSString    *name;
+     NSString    *icon;
+     NSString    *rating;
+     NSString    *vicinity;
+     NSArray     *type; //array
+     NSString    *url;
+     NSArray     *addressComponents; //array
+     NSString    *formattedAddress;
+     
+     NSString    *formattedPhoneNumber;
+     NSString    *website;
+     NSString    *internationalPhoneNumber;
+     NSString    *searchTerms;
+     CLLocationCoordinate2D coordinate;
+     //NEW
+     NSString    *distanceInFeetString;
+     NSString    *distanceInMilesString;
+     */
 }
 
 @property (nonatomic, retain) NSString    *placesId;
@@ -61,6 +63,7 @@
 //NEW
 @property (nonatomic, retain) NSString    *distanceInFeetString;
 @property (nonatomic, retain) NSString    *distanceInMilesString;
+
 
 - (id)initWithJsonResultDict:(NSDictionary *)jsonResultDict andUserCoordinates:(CLLocationCoordinate2D)userCoords;
 - (id)initWithJsonResultDict:(NSDictionary *)jsonResultDict searchTerms:(NSString *)terms andUserCoordinates:(CLLocationCoordinate2D)userCoords;
