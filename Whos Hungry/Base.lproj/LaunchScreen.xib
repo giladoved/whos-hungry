@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -12,21 +12,21 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="intro_owl.png" translatesAutoresizingMaskIntoConstraints="NO" id="hbv-Fa-TkQ">
-                    <rect key="frame" x="20" y="93" width="441" height="355"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="hbv-Fa-TkQ" secondAttribute="height" multiplier="441:355" id="cMj-bH-PcJ"/>
-                    </constraints>
-                </imageView>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Whos Hungry" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="kId-c2-rCX">
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Who's Hungry?" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="kId-c2-rCX">
                     <rect key="frame" x="8" y="42" width="464" height="43"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="43" id="Mpd-Rc-PvN"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="intro_owl.png" translatesAutoresizingMaskIntoConstraints="NO" id="hbv-Fa-TkQ">
+                    <rect key="frame" x="32" y="93" width="417" height="355"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="hbv-Fa-TkQ" secondAttribute="height" multiplier="417:355" id="ax8-VZ-Doa"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="0.94901967050000002" green="0.43529403210000001" blue="0.28627449269999999" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
@@ -34,9 +34,9 @@
                 <constraint firstItem="hbv-Fa-TkQ" firstAttribute="top" secondItem="kId-c2-rCX" secondAttribute="bottom" constant="8" id="3Pd-vI-KPH"/>
                 <constraint firstAttribute="trailing" secondItem="kId-c2-rCX" secondAttribute="trailing" constant="8" id="XDQ-ZX-XBq"/>
                 <constraint firstItem="kId-c2-rCX" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="ZCZ-aS-Nf7"/>
-                <constraint firstAttribute="trailing" secondItem="hbv-Fa-TkQ" secondAttribute="trailing" constant="19" id="ZhL-qz-zcn"/>
+                <constraint firstAttribute="trailing" secondItem="hbv-Fa-TkQ" secondAttribute="trailing" constant="31" id="ZhL-qz-zcn"/>
                 <constraint firstAttribute="centerX" secondItem="hbv-Fa-TkQ" secondAttribute="centerX" id="phV-yZ-lNZ"/>
-                <constraint firstItem="hbv-Fa-TkQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="zDp-ml-mdb"/>
+                <constraint firstItem="hbv-Fa-TkQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="32" id="zDp-ml-mdb"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

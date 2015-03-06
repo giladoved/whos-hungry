@@ -22,6 +22,7 @@
 
 @interface GooglePlacesObject : NSObject
 {
+    /*
     NSString    *placesId;
     NSString    *reference;
     NSString    *name;
@@ -40,7 +41,7 @@
     //NEW
     NSString    *distanceInFeetString;
     NSString    *distanceInMilesString;
-    
+    */
 }
 
 @property (nonatomic, retain) NSString    *placesId;
@@ -61,6 +62,7 @@
 //NEW
 @property (nonatomic, retain) NSString    *distanceInFeetString;
 @property (nonatomic, retain) NSString    *distanceInMilesString;
+
 
 - (id)initWithJsonResultDict:(NSDictionary *)jsonResultDict andUserCoordinates:(CLLocationCoordinate2D)userCoords;
 - (id)initWithJsonResultDict:(NSDictionary *)jsonResultDict searchTerms:(NSString *)terms andUserCoordinates:(CLLocationCoordinate2D)userCoords;
