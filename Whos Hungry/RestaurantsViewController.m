@@ -105,19 +105,52 @@
             if (placesData.count < 20)
                 amount = (int)placesData.count;
         for (int i = 0; i < amount; i++) {
-            NSDictionary *currentPlace = placesData[i];
-            [_allPlaces addObject:currentPlace];
-            NSLog(@"current place is %@:", currentPlace);
+            NSDictionary *currentPlaceDict = placesData[i];
+            NSLog(@"curr place %@", currentPlaceDict);
+            GooglePlacesObject *currentPlace = [[GooglePlacesObject alloc] init];
             
-            [emptyVotingDict setObject:@(0) forKey:currentPlace[@"name"]];
+            NSDictionary *geo = [currentPlaceDict objectForKey:@"geometry"];
+            NSDictionary *loc = [geo objectForKey:@"location"];
+            
+            //Figure out Distance from POI and User
+            CLLocation *poi = [[CLLocation alloc] initWithLatitude:[[loc objectForKey:@"lat"] doubleValue]  longitude:[[loc objectForKey:@"lng"] doubleValue]];
+            CLLocation *user = [[CLLocation alloc] initWithLatitude:self.currentCentre.latitude longitude:self.currentCentre.longitude];
+            CLLocationDistance inFeet = ([user distanceFromLocation:poi]) * 3.2808;
+            
+            CLLocationDistance inMiles = ([user distanceFromLocation:poi]) * 0.000621371192;
+            
+            NSString *distanceInFeet = [NSString stringWithFormat:@"%.f", round(2.0f * inFeet) / 2.0f];
+            NSString *distanceInMiles = [NSString stringWithFormat:@"%.2f", inMiles];
+            
+            currentPlace.name = currentPlaceDict[@"name"];
+            currentPlace.coordinate = poi.coordinate;
+            currentPlace.icon = currentPlaceDict[@"icon"];
+            currentPlace.placesId = currentPlaceDict[@"place_id"];
+            currentPlace.rating = currentPlaceDict[@"rating"];
+            currentPlace.vicinity = currentPlaceDict[@"vicinity"];
+            currentPlace.type = currentPlaceDict[@"types"];
+            currentPlace.reference = currentPlaceDict[@"reference"];
+            currentPlace.url = currentPlaceDict[@"url"];
+            currentPlace.addressComponents = currentPlaceDict[@"address_components"];
+            currentPlace.formattedAddress = currentPlaceDict[@"formatted_address"];
+            currentPlace.formattedPhoneNumber = currentPlaceDict[@"formatted_phone_number"];
+            currentPlace.website = currentPlaceDict[@"website"];
+            currentPlace.internationalPhoneNumber = currentPlaceDict[@"international_phone_number"];
+            currentPlace.searchTerms = currentPlaceDict[@""];
+            currentPlace.distanceInMilesString = distanceInMiles;
+            currentPlace.distanceInFeetString = distanceInFeet;
+            NSLog(@"currentplace: %@", currentPlace);
+            [_allPlaces addObject:currentPlace];
+            
+            [emptyVotingDict setObject:@(0) forKey:currentPlaceDict[@"name"]];
             
             NSString *urlStr;
-            if (currentPlace[@"photos"] != nil) {
-                NSDictionary *photosDict = currentPlace[@"photos"][0];
+            if (currentPlaceDict[@"photos"] != nil) {
+                NSDictionary *photosDict = currentPlaceDict[@"photos"][0];
                 NSString *photoRef = photosDict[@"photo_reference"];
-                urlStr = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/photo?photoreference=%@&key=%@&sensor=false&maxwidth=320", photoRef, GOOGLE_API_KEY_TWO];
+                urlStr = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/photo?photoreference=%@&key=%@&sensor=false&maxwidth=320", photoRef, GOOGLE_API_KEY];
             } else {
-                urlStr = currentPlace[@"icon"];
+                urlStr = currentPlaceDict[@"icon"];
             }
             
             NSURL * imageURL = [NSURL URLWithString:urlStr];
@@ -196,7 +229,7 @@
     static NSString *CellIdentifier = @"mainCell";
     RestaurantCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    NSDictionary *chosenResponse = [_allPlaces objectAtIndex:indexPath.row];
+    GooglePlacesObject *chosenResponse = [_allPlaces objectAtIndex:indexPath.row];
     cell.backgroundColor = [UIColor clearColor];
     
 
@@ -222,11 +255,11 @@
     if (restImages.count > 0 && indexPath.row < restImages.count) {
         cell.image.image = restImages[indexPath.row];
     }
-    cell.name.text = chosenResponse[@"name"];
+    cell.name.text = chosenResponse.name;
     
     /////////
     //Price level signs
-    int priceLevel = [chosenResponse[@"price_level"]intValue];
+    int priceLevel = [chosenResponse.rating intValue];
     if (!priceLevel) {
         priceLevel = 3;
     }
@@ -238,14 +271,18 @@
     
     ///////////
     //Loading distance from current location
-    NSDictionary* loc  = [[NSDictionary alloc] init];
+    /*NSDictionary* loc  = [[NSDictionary alloc] init];
     loc = chosenResponse[@"geometry"][@"location"];
     CLLocation* placeLocation = [[CLLocation alloc] initWithLatitude:(CLLocationDegrees)[loc[@"lat"] doubleValue] longitude:(CLLocationDegrees)[loc[@"lng"] doubleValue]];
     NSLog(@"Latitude %@ and Longitude %@", loc[@"lat"], loc[@"lng"]);
     
     CLLocation* userLocation = [[CLLocation alloc] initWithLatitude:_currentCentre.latitude longitude:_currentCentre.longitude];
     float distance = [placeLocation distanceFromLocation:userLocation] / 1609.0;
-    cell.distance.text = [NSString stringWithFormat:@"%1.2f mi.", distance];
+    cell.distance.text = [NSString stringWithFormat:@"%1.2f mi.", distance];*/
+    
+    
+    cell.distance.text = chosenResponse.distanceInMilesString;
+
     
     ///////////
     //Add or remove checkmark
@@ -253,18 +290,18 @@
     {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
         [cell setBackgroundColor:[UIColor colorWithRed:255.0/255.0 green:228.0/255.0 blue:171.0/255.0 alpha:1.0]];
-        [_restaurantIdArray addObject:chosenResponse[@"place_id"]];
-        [_restaurantNameArray addObject:chosenResponse[@"name"]];
-        [_restaurantPicArray addObject:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/photo?photoreference=%@&key=%@&sensor=false&maxwidth=320", chosenResponse[@"place_id"], GOOGLE_API_KEY]];
-        
-        if (chosenResponse[@"geometry"][@"location"]) {
-            [_restaurantXArray addObject:chosenResponse[@"geometry"][@"location"][@"lat"]];
-            [_restaurantYArray addObject:chosenResponse[@"geometry"][@"location"][@"lng"]];
+        /*[_restaurantIdArray addObject:chosenResponse.placesId];
+        [_restaurantNameArray addObject:chosenResponse.name];
+        [_restaurantPicArray addObject:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/photo?photoreference=%@&key=%@&sensor=false&maxwidth=320", chosenResponse.placesId, GOOGLE_API_KEY]];
+
+        if (CLLocationCoordinate2DIsValid(chosenResponse.coordinate)) {
+            [_restaurantXArray addObject:@(chosenResponse.coordinate.latitude)];
+            [_restaurantYArray addObject:@(chosenResponse.coordinate.longitude)];
         } else {
             [_restaurantXArray addObject:@"NONE"];
             [_restaurantYArray addObject:@"NONE"];
         }
-        //[_restaurantRatingArray addObject:chosenResponse[@"rating"]];
+        //[_restaurantRatingArray addObject:chosenResponse[@"rating"]];*/
     }
     else
     {
@@ -305,15 +342,6 @@
         [self.tickedIndexPaths removeObject:indexPath];
         _selectionCount--;
     }
-    
-    //////////
-    //Reset array of restaurant id's
-    [_restaurantIdArray removeAllObjects];
-    [_restaurantNameArray removeAllObjects];
-    [_restaurantPicArray removeAllObjects];
-    [_restaurantXArray removeAllObjects];
-    [_restaurantYArray removeAllObjects];
-    [_restaurantRatingArray removeAllObjects];
     
     //reload data again to display checkmarks
     [self.restaurantsTable reloadData];
@@ -356,6 +384,23 @@
         NSLog(@"Current Lobby is empty");
         tempLobby = [HootLobby new];
     }
+    
+    _restaurantIdArray = [NSMutableArray new];
+    _restaurantNameArray = [NSMutableArray new];
+    _restaurantPicArray = [NSMutableArray new];
+    _restaurantXArray = [NSMutableArray new];
+    _restaurantYArray = [NSMutableArray new];
+    _restaurantRatingArray = [NSMutableArray new];
+    
+    for (GooglePlacesObject *restaurant in _allPlaces) {
+        [_restaurantIdArray addObject:restaurant.placesId];
+        [_restaurantNameArray addObject:restaurant.name];
+        [_restaurantPicArray addObject:restaurant.reference];
+        [_restaurantXArray addObject:@(restaurant.coordinate.latitude)];
+        [_restaurantYArray addObject:@(restaurant.coordinate.longitude)];
+        [_restaurantRatingArray addObject:restaurant.rating];
+    }
+    
     tempLobby.placesIdArray = _restaurantIdArray;
     tempLobby.placesNamesArray = _restaurantNameArray;
     tempLobby.placesPicsArray = _restaurantPicArray;

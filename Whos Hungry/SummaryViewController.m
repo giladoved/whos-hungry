@@ -718,7 +718,6 @@ typedef enum accessType
         [_restaurantTable reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"FUCK DIS SHIT!");
-        
     }];
 }
 
@@ -729,7 +728,7 @@ typedef enum accessType
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if([segue.identifier isEqualToString:@"suggestaplace"]) {
         RestaurantsViewControllerGeneric *restVC = (RestaurantsViewControllerGeneric *)segue.destinationViewController;
-        restVC.voteTypes = @[@"museum"];
+        restVC.voteTypes = @[_currentLobby.voteType];
     }
 }
 
