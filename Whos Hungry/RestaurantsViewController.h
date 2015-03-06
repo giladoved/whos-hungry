@@ -19,6 +19,10 @@
 
 @interface RestaurantsViewController : UIViewController <CLLocationManagerDelegate, UITableViewDataSource, UITableViewDelegate>
 
+@property (strong, nonatomic) NSString* nextPageToken;
+@property int currentCellCount;
+@property BOOL secondPageLoaded, thirdPageLoaded, doneThisRound;
+@property BOOL isRestInfoCalled;
 @property CLLocationManager *locationManager;
 @property CLLocationCoordinate2D currentCentre;
 @property CLLocation *currentLocation;
