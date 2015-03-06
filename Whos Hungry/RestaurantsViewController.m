@@ -163,8 +163,10 @@
                     NSURL * imageURL = [NSURL URLWithString:urlStr];
                     NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
                     UIImage * image = [UIImage imageWithData:imageData];
-                    if (image != nil)
+                    if (image != nil) {
                         [restImages addObject:image];
+                        currentPlace.image = image;
+                    }
                     
                 }
                 _restaurantsTable.hidden = NO;
@@ -247,8 +249,10 @@
             NSURL * imageURL = [NSURL URLWithString:urlStr];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             UIImage * image = [UIImage imageWithData:imageData];
-            if (image != nil)
+            if (image != nil) {
                 [restImages addObject:image];
+                currentPlace.image = image;
+            }
             
         }
         _restaurantsTable.hidden = NO;
@@ -282,6 +286,9 @@
 }
 
 -(void) addChosenRestaurant {
+    if (self.customRestaurant != nil)
+        [_allPlaces removeObjectAtIndex:0];
+
     [_allPlaces insertObject:self.customRestaurant atIndex:0];
     for (int i = 0; i < self.tickedIndexPaths.count; i++) {
         NSIndexPath *path = self.tickedIndexPaths[i];
@@ -381,7 +388,7 @@
     
     
     cell.distance.text = chosenResponse.distanceInMilesString;
-
+    cell.image.image = chosenResponse.image;
     
     ///////////
     //Add or remove checkmark
@@ -494,26 +501,17 @@
     _restaurantRatingArray = [NSMutableArray new];
     
     for (int i = 0; i < self.tickedIndexPaths.count; i++){
-        int index = [self.tickedIndexPaths[i] row];
-        [_restaurantIdArray addObject:[_allPlaces[index] placesId]];
-        [_restaurantNameArray addObject:[_allPlaces[index] name]];
-        [_restaurantPicArray addObject:[_allPlaces[index] reference]];
-        CLLocationCoordinate2D coor = [_allPlaces[index] coordinate];
+        int index = (int)[self.tickedIndexPaths[i] row];
+        GooglePlacesObject *currentPlace = (GooglePlacesObject *) _allPlaces[index];
+        [_restaurantIdArray addObject:currentPlace.placesId];
+        [_restaurantNameArray addObject:currentPlace.name];
+        [_restaurantPicArray addObject:currentPlace.reference];
+        CLLocationCoordinate2D coor = currentPlace.coordinate;
         [_restaurantXArray addObject:@(coor.latitude)];
         [_restaurantYArray addObject:@(coor.longitude)];
         [_restaurantRatingArray addObject:@"1"];
     }
-    /*
-    for (GooglePlacesObject *restaurant in _allPlaces) {
-        
-        [_restaurantIdArray addObject:restaurant.placesId];
-        [_restaurantNameArray addObject:restaurant.name];
-        [_restaurantPicArray addObject:restaurant.reference];
-        [_restaurantXArray addObject:@(restaurant.coordinate.latitude)];
-        [_restaurantYArray addObject:@(restaurant.coordinate.longitude)];
-        [_restaurantRatingArray addObject:@"1"];
-    }
-    */
+
     tempLobby.placesIdArray = _restaurantIdArray;
     tempLobby.placesNamesArray = _restaurantNameArray;
     tempLobby.placesPicsArray = _restaurantPicArray;
