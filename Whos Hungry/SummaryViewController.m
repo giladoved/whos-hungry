@@ -31,6 +31,7 @@ static NSString * const BaseURLString = @"http://54.215.240.73:3000/";
     UIImage *selfImage;
     NSMutableArray *placesCountArray;
     MKPointAnnotation *restaurantPin;
+    MKPointAnnotation *selfPin;
     BOOL viewload;
     BOOL votingDone;
     
@@ -369,13 +370,13 @@ typedef enum accessType
         MKPinAnnotationView *customPinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationIdentifier];
         if (annotation == mapView.userLocation){
             if (selfImage != nil) {
-                customPinView.image = [UIImage imageWithImage:selfImage scaledToSize:CGSizeMake(30.0, 30.0)];
+                customPinView.image = [UIImage imageWithImage:selfImage scaledToSize:CGSizeMake(25.0, 25.0)];
             } else {
-                customPinView.image = [UIImage imageWithImage:[UIImage imageNamed:@"jennifer.jpg"] scaledToSize:CGSizeMake(30.0, 30.0)];
+                customPinView.image = [UIImage imageWithImage:[UIImage imageNamed:@"chiptole.png"] scaledToSize:CGSizeMake(30.0, 30.0)];
             }
         }
         else{
-            customPinView.image = [UIImage imageNamed:@"logosquare.png"];
+            //customPinView.image = [UIImage imageWithImage:[UIImage imageNamed:@"chipotle.png"] scaledToSize:CGSizeMake(25.0, 25.0)];
             //customPinView.image = [UIImage imageNamed:@"mySomeOtherImage.png"];
         }
         customPinView.animatesDrop = NO;
@@ -391,15 +392,14 @@ typedef enum accessType
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
     NSLog(@"updated! %@", userLocation);
     CLLocation *user = [[CLLocation alloc] initWithLatitude:userLocation.coordinate.latitude longitude:userLocation.coordinate.longitude];
-    if (restaurantCoor.latitude == 0)
-        restaurantCoor.latitude = 30;
-    if (restaurantCoor.longitude == 0)
-        restaurantCoor.longitude = -97;
+    self.currentLocation = user;
+    selfPin.coordinate = self.currentLocation.coordinate;
     CLLocation *locale = [[CLLocation alloc] initWithLatitude:restaurantCoor.latitude longitude:restaurantCoor.longitude];
     CLLocationDistance distance = [user distanceFromLocation:locale];
     
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(restaurantCoor, distance*2, distance*2);
-    [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+    MKCoordinateRegion mapRegion = [self.mapView regionThatFits:region];
+    [self.mapView setRegion:mapRegion animated:YES];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
@@ -727,6 +727,10 @@ typedef enum accessType
         NSLog(@"restaurant coordinates %f, %f", restaurantCoor.latitude, restaurantCoor.longitude);
         restaurantPin.title = _currentLobby.winnerRestName;
         [self.mapView addAnnotation:restaurantPin];
+        
+        selfPin = [[MKPointAnnotation alloc] init];
+        selfPin.coordinate = self.currentLocation.coordinate;
+        [self.mapView addAnnotation:selfPin];
         
         NSLog(@"updated! %@", _currentLocation);
         CLLocation *user = [[CLLocation alloc] initWithLatitude:_currentLocation.coordinate.latitude longitude:_currentLocation.coordinate.longitude];

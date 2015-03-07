@@ -221,7 +221,7 @@
             currentPlace.coordinate = poi.coordinate;
             currentPlace.icon = currentPlaceDict[@"icon"];
             currentPlace.placesId = currentPlaceDict[@"place_id"];
-            currentPlace.rating = currentPlaceDict[@"rating"];
+            currentPlace.rating = @"1";//currentPlaceDict[@"rating"];
             currentPlace.vicinity = currentPlaceDict[@"vicinity"];
             currentPlace.type = currentPlaceDict[@"types"];
             currentPlace.reference = currentPlaceDict[@"reference"];
@@ -358,7 +358,7 @@
         priceString = [priceString stringByAppendingString:@"$"];
     }
     cell.price.text = priceString;
-    cell.distance.text = chosenResponse.distanceInMilesString;
+    cell.distance.text = [NSString stringWithFormat:@"%@ mi.", chosenResponse.distanceInMilesString];
     cell.image.image = chosenResponse.image;
     
     ///////////
