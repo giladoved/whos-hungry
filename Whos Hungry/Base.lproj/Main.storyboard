@@ -538,16 +538,33 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EPS-83-rOO" userLabel="View - suggest a place">
                                         <rect key="frame" x="0.0" y="346" width="600" height="50"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="+ Suggest a different place" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="viv-Qg-M6M">
-                                                <rect key="frame" x="10" y="0.0" width="590" height="50"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+ Suggest a different place" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="viv-Qg-M6M">
+                                                <rect key="frame" x="8" y="0.0" width="592" height="50"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YRm-cE-zbt">
+                                                <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+                                                <state key="normal">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="suggestAPlace:" destination="wgV-7D-ZgK" eventType="touchUpInside" id="jQ1-HL-8bW"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.95294117647058818" green="0.43529411764705883" blue="0.27058823529411763" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
+                                            <constraint firstItem="YRm-cE-zbt" firstAttribute="top" secondItem="EPS-83-rOO" secondAttribute="top" id="2KG-X8-n1t"/>
+                                            <constraint firstAttribute="bottom" secondItem="YRm-cE-zbt" secondAttribute="bottom" id="6B8-OH-cVW"/>
+                                            <constraint firstItem="viv-Qg-M6M" firstAttribute="leading" secondItem="EPS-83-rOO" secondAttribute="leadingMargin" id="Gf9-dE-ERM"/>
+                                            <constraint firstAttribute="trailing" secondItem="YRm-cE-zbt" secondAttribute="trailing" id="LjA-yV-QNf"/>
                                             <constraint firstAttribute="height" constant="50" id="MRN-ht-CAa"/>
+                                            <constraint firstItem="viv-Qg-M6M" firstAttribute="top" secondItem="YRm-cE-zbt" secondAttribute="top" id="dwY-2v-kPz"/>
+                                            <constraint firstItem="viv-Qg-M6M" firstAttribute="trailing" secondItem="YRm-cE-zbt" secondAttribute="trailing" id="eDD-Mj-w3t"/>
+                                            <constraint firstItem="YRm-cE-zbt" firstAttribute="leading" secondItem="EPS-83-rOO" secondAttribute="leading" id="ikP-k9-qD1"/>
+                                            <constraint firstItem="viv-Qg-M6M" firstAttribute="bottom" secondItem="YRm-cE-zbt" secondAttribute="bottom" id="qFK-yd-cNE"/>
                                         </constraints>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Gu5-7R-QQ8" userLabel="Table View - restaurants">
@@ -993,6 +1010,6 @@
         <image name="intro_owl.png" width="497" height="434"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="lKP-gu-0e7"/>
+        <segue reference="g8t-bX-AwB"/>
     </inferredMetricsTieBreakers>
 </document>
