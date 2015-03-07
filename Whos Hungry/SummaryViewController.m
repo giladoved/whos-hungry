@@ -107,6 +107,7 @@ typedef enum accessType
         _isTimerReadyToBeActivated = TRUE;
         //_isExpirationUpdated = TRUE;
         
+        
     }
     else if (_accessType == ADMIN_RETURNS){
         
@@ -135,6 +136,21 @@ typedef enum accessType
     
     [self setSummaryTitle];
     
+
+    
+    //Get picture of user
+    /***************************************************************************************/
+    if (FBSession.activeSession.isOpen)
+    {
+        [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+            NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/me/picture?type=large&return_ssl_resources=1"]];
+            // Success! Include your code to handle the results here
+            NSLog(@"user info: %@", result);
+            _facebookID = [NSString stringWithFormat:@"%@", result[@"id"]];
+            selfImage = [UIImage imageWithImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:pictureURL]] scaledToSize:CGSizeMake(30.0, 30.0)];
+        }];
+    }
+    
     //Loads RSVP of users
     /***************************************************************************************/
     if (_currentLobby.voteid){
@@ -151,19 +167,6 @@ typedef enum accessType
             NSLog(@"Error: %@", error);
         }];
         
-    }
-    
-    //Get picture of user
-    /***************************************************************************************/
-    if (FBSession.activeSession.isOpen)
-    {
-        [FBRequestConnection startForMeWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-            NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/me/picture?type=large&return_ssl_resources=1"]];
-            // Success! Include your code to handle the results here
-            NSLog(@"user info: %@", result);
-            _facebookID = [NSString stringWithFormat:@"%@", result[@"id"]];
-            selfImage = [UIImage imageWithImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:pictureURL]] scaledToSize:CGSizeMake(30.0, 30.0)];
-        }];
     }
     
     //Map initialization and authorization
@@ -540,10 +543,62 @@ typedef enum accessType
         [self setSummaryTitle];
         [self.restaurantTable reloadData];
         //[self loadSummary];
+        [self loadRSVPisGoing:TRUE];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
     }];
 }
+
+-(void)loadRSVPisGoing:(BOOL)rsvp{
+    _imagesRemoved = FALSE;
+    int goingValue;
+    if (rsvp) {
+        goingValue = 1;
+    }
+    else{
+        goingValue = -1;
+    }
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    NSDictionary *params = @{
+                             @"user_id": _facebookID,
+                             @"vote_id": _currentLobby.voteid,
+                             @"go": @(goingValue)};
+    [manager POST:[NSString stringWithFormat:@"%@apis/make_rsvp", BaseURLString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"JSON: %@", responseObject);
+        NSDictionary *results = (NSDictionary *) responseObject;
+        NSLog(@"Dictionary %@",results);
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary *params = @{
+                                 @"vote_id": _currentLobby.voteid};
+        [manager POST:[NSString stringWithFormat:@"%@apis/show_rsvp", BaseURLString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSLog(@"JSON: %@", responseObject);
+            NSDictionary *results = (NSDictionary *) responseObject;
+            _currentLobby.rsvpArray = results[@"rsvps"];
+            [_friendsGoingTable reloadData];
+            NSLog(@"Dictionary %@",results);
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error);
+        }];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
+    if (rsvp) {
+        _rsvpCell.isGoing = 1;
+        [_rsvpCell.rsvpButton setImage:[UIImage imageNamed:@"GoingIcon(who'shungry).png"] forState:UIControlStateNormal];
+        [_rsvpCell.rsvpButton setBackgroundColor:[UIColor whiteColor]];
+        [_rsvpCell.arrowButton setBackgroundColor:[UIColor colorWithRed:(121.0/255.0) green:(231.0/255.0) blue:(175.0/255.0) alpha:1.0]];
+        _rsvpCell.isOpen = FALSE;
+    }
+    else{
+        _rsvpCell.isGoing = -1;
+        [_rsvpCell.rsvpButton setImage:[UIImage imageNamed:@"06_notgoingwithtext_icon-19.png"] forState:UIControlStateNormal];
+        [_rsvpCell.rsvpButton setBackgroundColor:[UIColor whiteColor]];
+        [_rsvpCell.arrowButton setBackgroundColor:[UIColor colorWithRed:(240.0/255.0) green:(110.0/255.0) blue:(52.0/255.0) alpha:1.0]];
+        _rsvpCell.isOpen = FALSE;
+    }
+
+}
+
 
 -(void)setSummaryTitle {
     NSString *englishVoteType;
@@ -871,12 +926,35 @@ typedef enum accessType
         RSVPFriendsTableViewCell *cell = (RSVPFriendsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
         cell.leftUtilityButtons = [self leftButtons];
         cell.rightUtilityButtons = [self rightButtons];
+        if (!_imagesRemoved) {
+            [cell.firstImage setImage:nil];
+            [cell.secondImage setImage:nil];
+            [cell.thirdImage setImage:nil];
+            [cell.fourthImage setImage:nil];
+            _imagesRemoved = TRUE;
+        }
         cell.delegate = self;
         cell.isGoing = 0;
         if (_currentLobby.rsvpArray.count > 0) {
             int extraCount = 0;
             int imageIndex = 0;
             for (int i = 0; i < _currentLobby.rsvpArray.count; i++) {
+                if ([(NSString*)_currentLobby.rsvpArray[i][@"facebook_id"] isEqualToString:_facebookID]){
+                    if ([_currentLobby.rsvpArray[i][@"go"]  isEqual: @1]) {
+                        [_rsvpCell.rsvpButton setImage:[UIImage imageNamed:@"GoingIcon(who'shungry).png"] forState:UIControlStateNormal];
+                        [_rsvpCell.rsvpButton setBackgroundColor:[UIColor whiteColor]];
+                        [_rsvpCell.arrowButton setBackgroundColor:[UIColor colorWithRed:(121.0/255.0) green:(231.0/255.0) blue:(175.0/255.0) alpha:1.0]];
+                        _rsvpCell.isOpen = FALSE;
+                    }
+                    else{
+                        _rsvpCell.isGoing = -1;
+                        [_rsvpCell.rsvpButton setImage:[UIImage imageNamed:@"06_notgoingwithtext_icon-19.png"] forState:UIControlStateNormal];
+                        [_rsvpCell.rsvpButton setBackgroundColor:[UIColor whiteColor]];
+                        [_rsvpCell.arrowButton setBackgroundColor:[UIColor colorWithRed:(240.0/255.0) green:(110.0/255.0) blue:(52.0/255.0) alpha:1.0]];
+                        _rsvpCell.isOpen = FALSE;
+                    }
+
+                }
                 NSURL *pictureURL = [NSURL URLWithString:[NSString stringWithFormat:_currentLobby.rsvpArray[i][@"picture"]]];
                 UIImage* tempImage = [UIImage new];
                 tempImage = [self resizeImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:pictureURL]] newSize:CGSizeMake(50.0, 50.0)];
@@ -898,6 +976,7 @@ typedef enum accessType
                     }
                     imageIndex++;
                 }
+                
             }
         }
         _rsvpCell = cell;
@@ -995,101 +1074,16 @@ typedef enum accessType
 }
 
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index{
+    [cell hideUtilityButtonsAnimated:YES];
     switch (index) {
         case 0:
         {
-            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-            NSDictionary *params = @{
-                                     @"user_id": _facebookID,
-                                     @"vote_id": _currentLobby.voteid,
-                                     @"go": @1};
-            [manager POST:[NSString stringWithFormat:@"%@apis/make_rsvp", BaseURLString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                NSLog(@"JSON: %@", responseObject);
-                NSDictionary *results = (NSDictionary *) responseObject;
-                NSLog(@"Dictionary %@",results);
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"Error: %@", error);
-            }];
-            /*
-            BOOL isInList = FALSE;
-            if (_currentLobby.rsvpArray) {
-                for (int i = 0; i < _currentLobby.rsvpArray.count; i++) {
-                    if ([_facebookID isEqualToString:_currentLobby.rsvpArray[i][@"user_fbid"] ]) {
-                        isInList = TRUE;
-                    }
-                }
-                if (!isInList) {
-                    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-                    NSDictionary *params = @{
-                                             @"user_id": _facebookID,
-                                             @"vote_id": _currentLobby.voteid,
-                                             @"go": @1};
-                    [manager POST:[NSString stringWithFormat:@"%@apis/make_rsvp", BaseURLString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        NSLog(@"JSON: %@", responseObject);
-                        NSDictionary *results = (NSDictionary *) responseObject;
-                        NSLog(@"Dictionary %@",results);
-                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        NSLog(@"Error: %@", error);
-                    }];
-                }
-
-            }
-            */
-            NSLog(@"Going button was pressed");
-            _rsvpCell.isGoing = 1;
-            
-            [_rsvpCell.rsvpButton setImage:[UIImage imageNamed:@"GoingIcon(who'shungry).png"] forState:UIControlStateNormal];
-            [_rsvpCell.rsvpButton setBackgroundColor:[UIColor whiteColor]];
-            [_rsvpCell.arrowButton setBackgroundColor:[UIColor colorWithRed:(121.0/255.0) green:(231.0/255.0) blue:(175.0/255.0) alpha:1.0]];
-            _rsvpCell.isOpen = FALSE;
-            [cell hideUtilityButtonsAnimated:YES];
-            break;
+            [self loadRSVPisGoing:TRUE];
+             break;
         }
         case 1:
         {
-            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-            NSDictionary *params = @{
-                                     @"user_id": _facebookID,
-                                     @"vote_id": _currentLobby.voteid,
-                                     @"go": @-1};
-            [manager POST:[NSString stringWithFormat:@"%@apis/make_rsvp", BaseURLString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                NSLog(@"JSON: %@", responseObject);
-                NSDictionary *results = (NSDictionary *) responseObject;
-                NSLog(@"Dictionary %@",results);
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"Error: %@", error);
-            }];
-            /*
-            BOOL isInList = FALSE;
-            if (_currentLobby.rsvpArray) {
-                for (int i = 0; i < _currentLobby.rsvpArray.count; i++) {
-                    if ([_facebookID isEqualToString:_currentLobby.rsvpArray[i][@"user_fbid"]]) {
-                        isInList = TRUE;
-                    }
-                }
-                if (!isInList) {
-                    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-                    NSDictionary *params = @{
-                                             @"user_id": _facebookID,
-                                             @"vote_id": _currentLobby.voteid,
-                                             @"go": @-1};
-                    [manager POST:[NSString stringWithFormat:@"%@apis/make_rsvp", BaseURLString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        NSLog(@"JSON: %@", responseObject);
-                        NSDictionary *results = (NSDictionary *) responseObject;
-                        NSLog(@"Dictionary %@",results);
-                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        NSLog(@"Error: %@", error);
-                    }];
-                }
-            }
-            */
-            NSLog(@"Not Going button was pressed");
-            _rsvpCell.isGoing = -1;
-            [_rsvpCell.rsvpButton setImage:[UIImage imageNamed:@"06_notgoingwithtext_icon-19.png"] forState:UIControlStateNormal];
-            [_rsvpCell.rsvpButton setBackgroundColor:[UIColor whiteColor]];
-            [_rsvpCell.arrowButton setBackgroundColor:[UIColor colorWithRed:(240.0/255.0) green:(110.0/255.0) blue:(52.0/255.0) alpha:1.0]];
-            _rsvpCell.isOpen = FALSE;
-            [cell hideUtilityButtonsAnimated:YES];
+            [self loadRSVPisGoing:FALSE];
             break;
         }
         default:

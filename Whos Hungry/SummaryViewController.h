@@ -28,7 +28,7 @@
 }
 
 @property __block NSString *facebookID;
-
+@property BOOL imagesRemoved;
 @property (nonatomic, retain) NSTimer *theTimer;
 @property (weak, nonatomic) IBOutlet UILabel *winningRestaurantLabel;
 
