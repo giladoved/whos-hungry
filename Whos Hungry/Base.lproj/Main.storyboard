@@ -453,50 +453,6 @@
                                     <constraint firstAttribute="height" constant="74" id="oqs-eV-AhX"/>
                                 </constraints>
                             </tableView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0bZ-r4-AEb" userLabel="View - Voting Complete">
-                                <rect key="frame" x="0.0" y="204" width="600" height="396"/>
-                                <subviews>
-                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="eUL-xv-8Dp" userLabel="Map View - restaurant map">
-                                        <rect key="frame" x="-97" y="53" width="62" height="38"/>
-                                    </mapView>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YVI-OG-x2V" userLabel="View - voting is closed label">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Voting is closed, see you there!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jVN-Hm-L21">
-                                                <rect key="frame" x="8" y="0.0" width="584" height="30"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.95294117649999999" green="0.43529411759999997" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </view>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BGF-S0-OG5" userLabel="View - winning restaurant">
-                                        <rect key="frame" x="0.0" y="30" width="600" height="121"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Chipotle    1.1mi." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QfE-vt-aZM">
-                                                <rect key="frame" x="8" y="0.0" width="524" height="30"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="☆☆☆☆☆" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f8e-Wn-ohi">
-                                                <rect key="frame" x="8" y="30" width="524" height="91"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JFB-LH-w7i" userLabel="get directions">
-                                                <rect key="frame" x="540" y="0.0" width="60" height="121"/>
-                                                <state key="normal" image="GetDirectionsIcon(who'shungry).png">
-                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                            </button>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.47450980390000003" green="0.92941176469999998" blue="0.68627450980000004" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5OE-NR-b7Q" userLabel="View - Voting Incomplete">
                                 <rect key="frame" x="0.0" y="204" width="600" height="396"/>
                                 <subviews>
@@ -591,17 +547,98 @@
                                     <constraint firstAttribute="trailing" secondItem="EPS-83-rOO" secondAttribute="trailing" id="yAv-Sr-6ny"/>
                                 </constraints>
                             </view>
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Js0-td-yet" userLabel="View - Voting Complete">
+                                <rect key="frame" x="0.0" y="200" width="600" height="400"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0oV-S9-OYc" userLabel="View - winning restaurant">
+                                        <rect key="frame" x="0.0" y="34" width="600" height="75"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="☆☆☆☆☆" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K58-6M-DnE">
+                                                <rect key="frame" x="8" y="38" width="524" height="37"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cVN-eP-i00" userLabel="get directions">
+                                                <rect key="frame" x="540" y="0.0" width="60" height="121"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="60" id="f9X-F1-OaC"/>
+                                                </constraints>
+                                                <state key="normal" image="GetDirectionsIcon(who'shungry).png">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Chipotle    1.1mi." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYg-44-dn9">
+                                                <rect key="frame" x="8" y="0.0" width="524" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="lTB-ba-TcE"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.47450980390000003" green="0.92941176469999998" blue="0.68627450980000004" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="qYg-44-dn9" firstAttribute="top" secondItem="0oV-S9-OYc" secondAttribute="top" id="0rQ-0q-z4D"/>
+                                            <constraint firstAttribute="bottom" secondItem="K58-6M-DnE" secondAttribute="bottom" id="8Ez-Kf-JKJ"/>
+                                            <constraint firstItem="K58-6M-DnE" firstAttribute="leading" secondItem="0oV-S9-OYc" secondAttribute="leadingMargin" id="LkO-DS-z3U"/>
+                                            <constraint firstItem="K58-6M-DnE" firstAttribute="top" secondItem="qYg-44-dn9" secondAttribute="bottom" constant="8" symbolic="YES" id="QDe-A1-dO6"/>
+                                            <constraint firstAttribute="bottom" secondItem="cVN-eP-i00" secondAttribute="bottom" constant="-46" id="Sry-7C-QS9"/>
+                                            <constraint firstAttribute="trailing" secondItem="cVN-eP-i00" secondAttribute="trailing" id="VNJ-DR-HQ4"/>
+                                            <constraint firstItem="cVN-eP-i00" firstAttribute="leading" secondItem="qYg-44-dn9" secondAttribute="trailing" constant="8" symbolic="YES" id="YOq-AL-Jpq"/>
+                                            <constraint firstItem="cVN-eP-i00" firstAttribute="leading" secondItem="K58-6M-DnE" secondAttribute="trailing" constant="8" symbolic="YES" id="fvB-q8-ECg"/>
+                                            <constraint firstItem="cVN-eP-i00" firstAttribute="top" secondItem="qYg-44-dn9" secondAttribute="top" id="g0L-2H-IaL"/>
+                                            <constraint firstItem="K58-6M-DnE" firstAttribute="leading" secondItem="qYg-44-dn9" secondAttribute="leading" id="t2J-BS-iPY"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wxh-XQ-Ebw" userLabel="View - voting is closed label">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Voting is closed, see you there!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L25-Sp-Mwr">
+                                                <rect key="frame" x="8" y="0.0" width="584" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.95294117649999999" green="0.43529411759999997" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="L25-Sp-Mwr" secondAttribute="bottom" id="IV6-rd-4G7"/>
+                                            <constraint firstItem="L25-Sp-Mwr" firstAttribute="trailing" secondItem="wxh-XQ-Ebw" secondAttribute="trailingMargin" id="K0N-Fu-Qhu"/>
+                                            <constraint firstItem="L25-Sp-Mwr" firstAttribute="leading" secondItem="wxh-XQ-Ebw" secondAttribute="leadingMargin" id="djx-36-c9I"/>
+                                            <constraint firstItem="L25-Sp-Mwr" firstAttribute="top" secondItem="wxh-XQ-Ebw" secondAttribute="top" id="usG-YV-nDX"/>
+                                        </constraints>
+                                    </view>
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="YZk-ix-yRO" userLabel="Map View - restaurant map">
+                                        <rect key="frame" x="0.0" y="117" width="600" height="483"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="483" id="xsg-iM-16V"/>
+                                        </constraints>
+                                    </mapView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="0oV-S9-OYc" firstAttribute="trailing" secondItem="YZk-ix-yRO" secondAttribute="trailing" id="1V1-go-f9F"/>
+                                    <constraint firstItem="0oV-S9-OYc" firstAttribute="top" secondItem="wxh-XQ-Ebw" secondAttribute="bottom" constant="4" id="2lc-qH-Bnw"/>
+                                    <constraint firstItem="YZk-ix-yRO" firstAttribute="top" secondItem="0oV-S9-OYc" secondAttribute="bottom" constant="8" symbolic="YES" id="AJI-Zv-9Hu"/>
+                                    <constraint firstItem="wxh-XQ-Ebw" firstAttribute="leading" secondItem="0oV-S9-OYc" secondAttribute="leading" id="CZ5-ui-ccx"/>
+                                    <constraint firstItem="wxh-XQ-Ebw" firstAttribute="top" secondItem="Js0-td-yet" secondAttribute="top" id="EA8-0d-dZR"/>
+                                    <constraint firstItem="YZk-ix-yRO" firstAttribute="leading" secondItem="0oV-S9-OYc" secondAttribute="leading" id="R73-ho-4nl"/>
+                                    <constraint firstItem="0oV-S9-OYc" firstAttribute="leading" secondItem="Js0-td-yet" secondAttribute="leading" id="a4X-3q-AqN"/>
+                                    <constraint firstAttribute="trailing" secondItem="YZk-ix-yRO" secondAttribute="trailing" id="aS4-KD-9G4"/>
+                                    <constraint firstItem="0oV-S9-OYc" firstAttribute="top" secondItem="Js0-td-yet" secondAttribute="top" constant="34" id="bPq-Pa-EP8"/>
+                                    <constraint firstAttribute="bottom" secondItem="YZk-ix-yRO" secondAttribute="bottom" id="fY0-ZL-Xxb"/>
+                                    <constraint firstItem="wxh-XQ-Ebw" firstAttribute="trailing" secondItem="0oV-S9-OYc" secondAttribute="trailing" id="kJa-G5-Dco"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="d8e-KT-v4S" secondAttribute="trailing" constant="-36" id="0eg-Nq-3dj"/>
-                            <constraint firstItem="5OE-NR-b7Q" firstAttribute="top" secondItem="0bZ-r4-AEb" secondAttribute="top" id="8uF-Je-jNG"/>
                             <constraint firstItem="d8e-KT-v4S" firstAttribute="leading" secondItem="3AZ-H2-4ZW" secondAttribute="leadingMargin" constant="-36" id="BJb-hS-6r1"/>
                             <constraint firstAttribute="centerX" secondItem="d8e-KT-v4S" secondAttribute="centerX" id="DO5-9y-xSj"/>
-                            <constraint firstItem="5OE-NR-b7Q" firstAttribute="trailing" secondItem="0bZ-r4-AEb" secondAttribute="trailing" id="RZk-dn-rhW"/>
                             <constraint firstItem="yS6-Zb-cfS" firstAttribute="leading" secondItem="3AZ-H2-4ZW" secondAttribute="leadingMargin" constant="-16" id="UWV-RS-z00"/>
                             <constraint firstAttribute="trailingMargin" secondItem="5OE-NR-b7Q" secondAttribute="trailing" constant="-16" id="VQr-vq-U9M"/>
-                            <constraint firstItem="5OE-NR-b7Q" firstAttribute="leading" secondItem="0bZ-r4-AEb" secondAttribute="leading" id="WoT-Ih-sZ0"/>
                             <constraint firstItem="5OE-NR-b7Q" firstAttribute="bottom" secondItem="cor-Gt-NlZ" secondAttribute="top" id="bkU-DE-BYd"/>
                             <constraint firstItem="d8e-KT-v4S" firstAttribute="top" secondItem="3AZ-H2-4ZW" secondAttribute="topMargin" constant="-20" id="ci2-CW-yvy"/>
                             <constraint firstItem="5OE-NR-b7Q" firstAttribute="top" secondItem="yS6-Zb-cfS" secondAttribute="bottom" id="crz-Yb-Cnd"/>
@@ -609,25 +646,42 @@
                             <constraint firstAttribute="trailingMargin" secondItem="yS6-Zb-cfS" secondAttribute="trailing" constant="-16" id="g5k-Sz-6zE"/>
                             <constraint firstAttribute="centerX" secondItem="5OE-NR-b7Q" secondAttribute="centerX" id="hpU-nX-A8y"/>
                             <constraint firstItem="5OE-NR-b7Q" firstAttribute="leading" secondItem="3AZ-H2-4ZW" secondAttribute="leadingMargin" constant="-16" id="of4-Xk-ss1"/>
-                            <constraint firstItem="5OE-NR-b7Q" firstAttribute="bottom" secondItem="0bZ-r4-AEb" secondAttribute="bottom" id="wVo-jB-aOM"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="8vi-rE-1Ka"/>
                     <connections>
                         <outlet property="friendsGoingTable" destination="yS6-Zb-cfS" id="X73-xD-zGG"/>
-                        <outlet property="mapView" destination="eUL-xv-8Dp" id="ZkK-Cp-CTC"/>
+                        <outlet property="mapView" destination="YZk-ix-yRO" id="EcG-kx-EtQ"/>
                         <outlet property="restaurantTable" destination="Gu5-7R-QQ8" id="HQR-aS-VPh"/>
                         <outlet property="summaryTitleLbl" destination="LYI-yY-8GR" id="7N9-tM-O0p"/>
-                        <outlet property="votingCompleteView" destination="0bZ-r4-AEb" id="cUj-46-pMB"/>
+                        <outlet property="votingCompleteView" destination="Js0-td-yet" id="F3P-OU-KNw"/>
                         <outlet property="votingIncompleteView" destination="5OE-NR-b7Q" id="Fh3-yM-vhV"/>
                         <outlet property="whenTimeLbl" destination="PpS-YC-g0F" id="Lhi-0n-qv4"/>
-                        <outlet property="winningRestaurantLabel" destination="QfE-vt-aZM" id="6cb-wC-dA4"/>
+                        <outlet property="winningRestaurantLabel" destination="qYg-44-dn9" id="Cau-q1-5pZ"/>
                         <segue destination="xXR-B0-jRn" kind="presentation" identifier="suggestaplace" id="BhZ-Cx-AMk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XCE-Iq-Rn3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2565" y="1653"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="U6Y-Xt-Gcn">
+            <objects>
+                <viewController id="vIC-r8-bxc" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="8b8-h3-dC8"/>
+                        <viewControllerLayoutGuide type="bottom" id="81b-0l-9JZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="swo-MZ-uac">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nwE-Ge-CGJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3279" y="1610"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="qpl-19-Wdl">
@@ -750,7 +804,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="restaurantsTable" destination="8bZ-DB-Z56" id="Q6b-VU-iOV"/>
-                        <segue destination="ZUr-iQ-Lfh" kind="presentation" identifier="chooseaplace" id="5eC-uo-PyU"/>
+                        <segue destination="ZUr-iQ-Lfh" kind="presentation" identifier="chooseaplace" id="f7k-E0-iqH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ftH-sh-3Zp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -878,10 +932,10 @@
             </objects>
             <point key="canvasLocation" x="3078" y="2445"/>
         </scene>
-        <!--Suggest A Place-->
+        <!--Choose a Place-->
         <scene sceneID="qN4-6E-JWl">
             <objects>
-                <viewController storyboardIdentifier="ChooseOwnRestaurant" id="ZUr-iQ-Lfh" customClass="RestaurantsViewControllerGeneric" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChooseOwnRestaurant" title="Choose a Place" id="ZUr-iQ-Lfh" customClass="RestaurantsViewControllerGeneric" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="MqV-bk-4XA"/>
                         <viewControllerLayoutGuide type="bottom" id="kD2-7f-4de"/>
@@ -970,19 +1024,22 @@
                                     <outlet property="delegate" destination="ZUr-iQ-Lfh" id="Pod-6G-8Od"/>
                                 </connections>
                             </tableView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="196-cD-4pl">
-                                <rect key="frame" x="290" y="300" width="20" height="20"/>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="196-cD-4pl">
+                                <rect key="frame" x="290" y="371" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="gOV-Xc-lrq" firstAttribute="bottom" secondItem="kD2-7f-4de" secondAttribute="top" id="5DQ-aA-eaM"/>
                             <constraint firstItem="gOV-Xc-lrq" firstAttribute="leading" secondItem="UuF-Mw-TsH" secondAttribute="leading" id="Pes-3W-4RH"/>
+                            <constraint firstItem="196-cD-4pl" firstAttribute="centerX" secondItem="gOV-Xc-lrq" secondAttribute="centerX" id="bQx-Cs-1wu"/>
+                            <constraint firstItem="kD2-7f-4de" firstAttribute="top" secondItem="196-cD-4pl" secondAttribute="bottom" constant="209" id="oVA-4I-Cod"/>
                             <constraint firstAttribute="trailing" secondItem="gOV-Xc-lrq" secondAttribute="trailing" id="rWF-eT-DIo"/>
                             <constraint firstItem="gOV-Xc-lrq" firstAttribute="top" secondItem="MqV-bk-4XA" secondAttribute="bottom" id="zTc-IF-aGF"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Suggest A Place" id="aVQ-pF-Rrr">
+                    <navigationItem key="navigationItem" title="Choose a Place" id="aVQ-pF-Rrr">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="cFL-ad-Pzg"/>
                         <barButtonItem key="rightBarButtonItem" title="Done" id="frf-qI-Gxk">
                             <connections>
                                 <action selector="doneTapped:" destination="ZUr-iQ-Lfh" id="i0R-tq-Mi4"/>
@@ -997,7 +1054,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GuL-p2-Jwy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2334" y="3166"/>
+            <point key="canvasLocation" x="2337" y="3220"/>
         </scene>
     </scenes>
     <resources>

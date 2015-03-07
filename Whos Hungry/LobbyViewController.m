@@ -139,6 +139,8 @@ typedef enum accessType {
                                                           FBSessionState state,
                                                           NSError *error) {
                                           
+                                          NSLog(@"session: %@", session.accessTokenData.accessToken);
+                                          
                                           if (error) {
                                               UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
                                                                                                   message:error.localizedDescription

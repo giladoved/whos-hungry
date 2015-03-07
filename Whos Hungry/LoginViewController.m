@@ -58,6 +58,7 @@ static NSString * const BaseURLString = @"http://54.215.240.73:3000/";
                             user:(id<FBGraphUser>)user {
     //NSString *firstTime = [[NSUserDefaults standardUserDefaults] stringForKey:@"firstTime"];
     //if (firstTime == nil) {
+    NSLog(@"user: %@", user);
         NSLog(@"user id is :%@", user.objectID);
         NSLog(@"username is %@", user.name);
         pushToken = [[NSUserDefaults standardUserDefaults]

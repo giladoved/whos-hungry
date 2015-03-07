@@ -22,6 +22,9 @@
         self.downBtn.enabled = YES;
         self.votes++;
     }
+    
+    [self disableVoting];
+    
     self.status = @"+1";
     self.voteLbl.text = [NSString stringWithFormat:@"%i", self.votes];
     NSDictionary *dataDict = [NSDictionary dictionaryWithObject:self
@@ -43,6 +46,9 @@
         self.upBtn.enabled = YES;
         self.downBtn.enabled = YES;
     }
+    
+    [self disableVoting];
+    
     self.status = @"-1";
     self.voteLbl.text = [NSString stringWithFormat:@"%i", self.votes];
     NSDictionary *dataDict = [NSDictionary dictionaryWithObject:self
@@ -50,7 +56,14 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"makeVote" object:nil userInfo:dataDict];
 }
 
+-(void) disableVoting {
+    self.upBtn.userInteractionEnabled = NO;
+    self.downBtn.userInteractionEnabled = NO;
+}
+
 -(void) enableDisable {
+    self.upBtn.userInteractionEnabled = YES;
+    self.downBtn.userInteractionEnabled = YES;
     if (self.stateInt == -1) {
         self.upBtn.enabled = YES;
         self.downBtn.enabled = NO;

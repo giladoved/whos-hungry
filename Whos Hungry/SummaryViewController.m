@@ -270,7 +270,7 @@ typedef enum accessType
     if (theData != nil) {
         sender = (UpDownVoteView *)[theData objectForKey:@"sender"];
     }
-
+    [sender enableDisable];
     
     NSLog(@"restaurant list ids: %@", _currentLobby.placesIdArray);
     NSLog(@"voted restaurant id : %@", _currentLobby.placesIdArray[sender.index]);
@@ -290,6 +290,7 @@ typedef enum accessType
         NSLog(@"Error: %@", error);
     }];
 }
+
 
 -(NSArray *)cellsForTableView:(UITableView *)tableView
 {

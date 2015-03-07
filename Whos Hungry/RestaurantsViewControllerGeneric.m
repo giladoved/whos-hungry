@@ -60,6 +60,7 @@
     self.loader.hidesWhenStopped = YES;
     self.loader.hidden = YES;
     [self.searchBar becomeFirstResponder];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated

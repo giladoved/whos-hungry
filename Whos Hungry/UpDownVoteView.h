@@ -23,4 +23,5 @@
 - (IBAction)voteUp:(id)sender;
 - (IBAction)voteDown:(id)sender;
 -(void) enableDisable;
+-(void) disableVoting;
 @end

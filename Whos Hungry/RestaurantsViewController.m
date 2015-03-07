@@ -341,27 +341,7 @@
     
     GooglePlacesObject *chosenResponse = [_allPlaces objectAtIndex:indexPath.row];
     cell.backgroundColor = [UIColor clearColor];
-    
 
-    
-    //////////
-    //Load image into the cell
-    /*
-    dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(concurrentQueue, ^{
-        NSDictionary *photoDict = [[response objectForKey:@"photos"] objectAtIndex:0];
-        NSString *photoRef = [photoDict objectForKey:@"photo_reference"];
-        NSString *urlStr = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/photo?photoreference=%@&key=%@&sensor=false&maxwidth=320", photoRef, GOOGLE_API_KEY_THREE];
-        NSURL * imageURL = [NSURL URLWithString:urlStr];
-        
-        NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
-        UIImage * image = [UIImage imageWithData:imageData];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            cell.image.image = image;
-        });
-    });
-    */
     if (restImages.count > 0 && indexPath.row < restImages.count) {
         cell.image.image = restImages[indexPath.row];
     }
@@ -378,19 +358,6 @@
         priceString = [priceString stringByAppendingString:@"$"];
     }
     cell.price.text = priceString;
-    
-    ///////////
-    //Loading distance from current location
-    /*NSDictionary* loc  = [[NSDictionary alloc] init];
-    loc = chosenResponse[@"geometry"][@"location"];
-    CLLocation* placeLocation = [[CLLocation alloc] initWithLatitude:(CLLocationDegrees)[loc[@"lat"] doubleValue] longitude:(CLLocationDegrees)[loc[@"lng"] doubleValue]];
-    NSLog(@"Latitude %@ and Longitude %@", loc[@"lat"], loc[@"lng"]);
-    
-    CLLocation* userLocation = [[CLLocation alloc] initWithLatitude:_currentCentre.latitude longitude:_currentCentre.longitude];
-    float distance = [placeLocation distanceFromLocation:userLocation] / 1609.0;
-    cell.distance.text = [NSString stringWithFormat:@"%1.2f mi.", distance];*/
-    
-    
     cell.distance.text = chosenResponse.distanceInMilesString;
     cell.image.image = chosenResponse.image;
     
