@@ -577,7 +577,7 @@ typedef enum accessType
         hoursLeft = components.hour;
         minutesLeft = components.minute; //plus 1 to include the chosen time, plus 0 not t0
         secondsLeft = components.second;
-        NSLog(@"time left is :%ld hrs and %ld mins", (long)hoursLeft, (long)minutesLeft);
+        //NSLog(@"time left is :%ld hrs and %ld mins", (long)hoursLeft, (long)minutesLeft);
         
         self.whenTimeLbl.text = [NSString stringWithFormat:@"%ldhr %ld min left %ld secs", (long)hoursLeft, (long)minutesLeft, (long)secondsLeft];
         
@@ -742,6 +742,38 @@ typedef enum accessType
 
 -(void) addChosenRestaurant  {
     NSLog(@"here's the chosen place: %@", self.chosenPlace.name);
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    if (_currentLobby.voteid != nil) {
+        NSLog(@"cuurnetlobby: %@", self.currentLobby.voteid);
+        NSLog(@"name: %@", self.chosenPlace);
+        NSLog(@"name: %@", self.chosenPlace.name);
+        NSLog(@"id: %@", self.chosenPlace.placesId);
+        NSLog(@"imagestr: %@", self.chosenPlace.imageUrl);
+        NSLog(@"ratnig: %@", self.chosenPlace.rating);
+        
+        if (self.chosenPlace.rating == nil)
+            self.chosenPlace.rating = @"1";
+        
+        if (self.chosenPlace.imageUrl == nil)
+            self.chosenPlace.imageUrl = @"";
+        
+        NSDictionary *params = @{
+                                 @"vote_id": _currentLobby.voteid,
+                                 @"restaurant_id":self.chosenPlace.placesId,
+                                 @"restaurant_name":self.chosenPlace.name,
+                                 @"restaurant_picture":self.chosenPlace.imageUrl,
+                                 @"restaurant_location_x":[NSString stringWithFormat:@"%f", self.chosenPlace.coordinate.latitude],
+                                 @"restaurant_location_y":[NSString stringWithFormat:@"%f", self.chosenPlace.coordinate.longitude],
+                                 @"restaurant_stars":self.chosenPlace.rating};
+        [manager POST:[NSString stringWithFormat:@"%@apis/add_restaurant_to_vote", BaseURLString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSDictionary *results = (NSDictionary *) responseObject;
+            NSLog(@"Dictionary %@",results);
+            //[self loadVotes];
+            //[self.restaurantTable reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error);
+        }];
+    }
 }
 
 - (GooglePlacesObject *)loadRestaurantObjectWithKey:(NSString *)key {

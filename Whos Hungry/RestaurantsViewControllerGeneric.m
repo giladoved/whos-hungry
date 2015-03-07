@@ -131,6 +131,8 @@
                 urlStr = currentPlaceDict[@"icon"];
             }
             
+            currentPlace.imageUrl = urlStr;
+            
             NSURL * imageURL = [NSURL URLWithString:urlStr];
             NSData * imageData = [NSData dataWithContentsOfURL:imageURL];
             UIImage * image = [UIImage imageWithData:imageData];

@@ -70,7 +70,6 @@ typedef enum accessType
     if([[UIApplication sharedApplication] applicationState] == UIApplicationStateInactive)
     {
         NSLog(@"load up application from inactive state");
-        
     }
     else {
         NSLog(@"loaded and active");

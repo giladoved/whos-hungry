@@ -13,7 +13,27 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self.name = @"GIGILASD";
+        self.name = @"restaurant";
+        self.icon = @"";
+        self.rating = @"1";
+        self.placesId = @"";
+        self.vicinity = @"";
+        self.type = @[@"food"];
+        self.reference = @"";
+        self.url = @"";
+        self.addressComponents = @[@""];
+        self.formattedAddress = @"";
+        self.formattedPhoneNumber = @"";
+        self.website = @"";
+        self.internationalPhoneNumber = @"";
+        self.searchTerms = @"";
+        double lat = 0.0;
+        double lng = 0.0;
+        self.coordinate = CLLocationCoordinate2DMake(lat, lng);
+        self.distanceInFeetString = @" ft.";
+        self.distanceInMilesString = @" mi.";
+        self.image = [UIImage new];
+        self.imageUrl = @"";
     }
     return self;
 }
@@ -38,6 +58,7 @@
     [encoder encodeObject:self.distanceInFeetString forKey:@"distanceInFeetString"];
     [encoder encodeObject:self.distanceInMilesString forKey:@"distanceInMilesString"];
     [encoder encodeObject:self.image forKey:@"image"];
+    [encoder encodeObject:self.imageUrl forKey:@"imageUrl"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -62,6 +83,7 @@
         self.distanceInFeetString = [decoder decodeObjectForKey:@"distanceInFeetString"];
         self.distanceInMilesString = [decoder decodeObjectForKey:@"distanceInMilesString"];
         self.image = [decoder decodeObjectForKey:@"image"];
+        self.imageUrl = [decoder decodeObjectForKey:@"imageUrl"];
     }
     return self;
 }

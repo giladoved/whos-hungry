@@ -30,6 +30,7 @@
 @property (nonatomic, strong) NSString    *distanceInFeetString;
 @property (nonatomic, strong) NSString    *distanceInMilesString;
 @property (nonatomic, strong) UIImage    *image;
+@property (nonatomic, strong) NSString    *imageUrl;
 
 
 @end
