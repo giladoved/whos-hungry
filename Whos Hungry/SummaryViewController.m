@@ -37,6 +37,12 @@ static NSString * const BaseURLString = @"http://54.215.240.73:3000/";
     
     HootLobby *lobby;
     BOOL isAdmin;
+    
+    UITableView *tableFriendsGoing;
+    NSMutableArray *friendsGoingID;
+    NSMutableArray *friendsPins;
+
+    CLLocationDirection distanceSinceLastUpdate;
 }
 
 @end
@@ -99,6 +105,8 @@ typedef enum accessType
     
     _totalVoteArray = [[NSMutableArray alloc] initWithObjects:@0,@0,@0,nil]; //max number of restaurants able to be chosen (3 places)
     _voteStatusArray = [[NSMutableArray alloc] initWithObjects:@0,@0,@0,nil];
+    friendsGoingID = [NSMutableArray new];
+    friendsPins = [NSMutableArray new];
     
     if (_accessType == ADMIN_FIRST) {
         //Initialize all the groups and create vote
@@ -176,6 +184,11 @@ typedef enum accessType
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    locationManager.pausesLocationUpdatesAutomatically = NO;
+    locationManager.activityType = CLActivityTypeFitness;
+    locationManager.distanceFilter = 200.0f; //meters, avg city block length
+    locationManager.activityType = CLActivityTypeAutomotiveNavigation;
+    [locationManager startMonitoringSignificantLocationChanges];
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         [locationManager requestWhenInUseAuthorization];
@@ -187,9 +200,6 @@ typedef enum accessType
         authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
         [locationManager startUpdatingLocation];
     }
-    [locationManager startUpdatingLocation];
-    
-    
 
     self.mapView.delegate = self;
 
@@ -201,8 +211,6 @@ typedef enum accessType
     self.friendsGoingTable.dataSource = self;
     self.friendsGoingTable.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.friendsGoingTable.allowsSelection = NO;
-
-    
 
 
         NSLog(@"TIMER ACTIVATED!!!!");
@@ -250,17 +258,6 @@ typedef enum accessType
         }
     }];
 
-}
-
-
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    NSLog(@"%@", [locations lastObject]);
-    _currentLocation = locations[0];
-    NSLog(@"current location is %f and %f",_currentLocation.coordinate.latitude, _currentLocation.coordinate.longitude);
-    [_restaurantTable reloadData];
-    [locationManager stopUpdatingLocation];
 }
 
 -(void) makeVote:(NSNotification *)note {
@@ -314,6 +311,7 @@ typedef enum accessType
 
 - (IBAction)goHome:(id)sender {
     [locationManager stopUpdatingLocation];
+    [locationManager stopMonitoringSignificantLocationChanges];
     [self.theTimer invalidate];
     self.theTimer = nil;
 
@@ -361,7 +359,68 @@ typedef enum accessType
 
 #pragma mark - Location methods
 
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    _currentLocation = [locations lastObject];
+    if (locations.count == 1) {
+        distanceSinceLastUpdate = 0;
+    } else if (locations.count > 1) {
+        distanceSinceLastUpdate = [self.currentLocation distanceFromLocation:locations[locations.count-2]];
+    }
+    
+    [_restaurantTable reloadData];
+    [locationManager stopUpdatingLocation];
+}
+
+/*- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+    static NSString *identifier = @"Annotation";
+    if ([annotation isKindOfClass:[MKUserLocation class]]) {
+        
+        MKAnnotationView *annotationView = (MKAnnotationView *) [_mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        if (annotationView == nil) {
+            annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+            annotationView.enabled = YES;
+            annotationView.canShowCallout = YES;
+            annotationView.image = [UIImage imageWithImage:[UIImage imageNamed:@"chiptole.png"] scaledToSize:CGSizeMake(30.0, 30.0)];
+        } else {
+            annotationView.annotation = annotation;
+        }
+        
+        return annotationView;
+    }
+    
+    return nil;
+}*/
+
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+    if ([[annotation title] isEqualToString:@"Current Location"]) {
+        return nil;
+    }
+    
+    static NSString* AnnotationIdentifier = @"Annotation";
+    MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
+    
+    if (!pinView) {
+        MKPinAnnotationView *customPinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationIdentifier];
+        if (annotation == mapView.userLocation){
+            //customPinView.image = [UIImage imageWithImage:selfImage scaledToSize:CGSizeMake(28.0, 28.0)];
+        }
+        else{
+            customPinView.image = [UIImage imageWithImage:[UIImage imageNamed:@"drinks.png"] scaledToSize:CGSizeMake(30.0, 30.0)];
+        }
+        customPinView.animatesDrop = NO;
+        customPinView.canShowCallout = YES;
+        return customPinView;
+    } else {
+        pinView.annotation = annotation;
+    }
+    
+    return pinView;
+}
+
+
+
+/*- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
     
     static NSString* AnnotationIdentifier = @"Annotation";
     MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
@@ -387,30 +446,57 @@ typedef enum accessType
     }
     
     return pinView;
-}
+}*/
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
-    NSLog(@"updated! %@", userLocation);
-    CLLocation *user = [[CLLocation alloc] initWithLatitude:userLocation.coordinate.latitude longitude:userLocation.coordinate.longitude];
-    self.currentLocation = user;
-    selfPin.coordinate = self.currentLocation.coordinate;
-    CLLocation *locale = [[CLLocation alloc] initWithLatitude:restaurantCoor.latitude longitude:restaurantCoor.longitude];
-    CLLocationDistance distance = [user distanceFromLocation:locale];
-    
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(restaurantCoor, distance*2, distance*2);
-    MKCoordinateRegion mapRegion = [self.mapView regionThatFits:region];
-    [self.mapView setRegion:mapRegion animated:YES];
+    NSLog(@"distance::::: %f", distanceSinceLastUpdate);
+    //if (distanceSinceLastUpdate > 200 || distanceSinceLastUpdate == 0) {
+        NSLog(@"updated! %@", userLocation);
+        
+        for (int i = 0; i < friendsGoingID.count; i++) {
+            //get every user's location
+            //update the location of the user's pin
+            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+            NSDictionary *params = @{
+                                     @"user_id": _currentLobby.facebookId};
+            [manager POST:[NSString stringWithFormat:@"%@apis/retrieve_location", BaseURLString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                NSLog(@"Updated Location! %@", responseObject);
+                NSDictionary *results = (NSDictionary *) responseObject;
+                MKPointAnnotation *pin = (MKPointAnnotation *)friendsPins[i];
+                CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(results[@"location_x"],results[@"location_y"]);
+                pin.coordinate = coord;
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"Error: %@", error);
+            }];
+        }
+        
+        selfPin.coordinate = self.currentLocation.coordinate;
+        CLLocation *locale = [[CLLocation alloc] initWithLatitude:restaurantCoor.latitude longitude:restaurantCoor.longitude];
+        CLLocationDistance distance = [self.currentLocation distanceFromLocation:locale];
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(restaurantCoor, distance*2, distance*2);
+        MKCoordinateRegion mapRegion = [self.mapView regionThatFits:region];
+        [self.mapView setRegion:mapRegion animated:YES];
+        
+        
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary *params = @{
+                                 @"user_id": _currentLobby.facebookId,
+                                 @"location_x":@(self.currentLocation.coordinate.latitude),
+                                 @"location_y":@(self.currentLocation.coordinate.longitude)};
+        [manager POST:[NSString stringWithFormat:@"%@apis/update_location", BaseURLString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSLog(@"Updated Location! %@", responseObject);
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error);
+        }];
+        distanceSinceLastUpdate = 1;
+    //}
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
     NSLog(@"didFailWithError: %@", error);
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    NSLog(@"New Location %f %f", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
-    _currentLocation = newLocation;
-    //[locationManager stopUpdatingLocation];
-}
 
 #pragma mark - NSUserDefaults methods
 
@@ -575,6 +661,7 @@ typedef enum accessType
             NSLog(@"JSON: %@", responseObject);
             NSDictionary *results = (NSDictionary *) responseObject;
             _currentLobby.rsvpArray = results[@"rsvps"];
+            friendsGoingID = results[@"rsvps"];
             [_friendsGoingTable reloadData];
             NSLog(@"Dictionary %@",results);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -670,18 +757,6 @@ typedef enum accessType
         [locationManager requestAlwaysAuthorization];
     }
     
-    CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
-    if (authorizationStatus == kCLAuthorizationStatusAuthorized ||
-        authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
-        authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        
-        self.mapView.showsUserLocation = YES;
-        [locationManager startUpdatingLocation];
-        
-    } else {
-        NSLog(@"or nah");
-    }
-    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     NSLog(@"vote id of show single vote is %@", _currentLobby.voteid);
     NSDictionary *params = @{@"vote_id": _currentLobby.voteid};
@@ -732,19 +807,23 @@ typedef enum accessType
         selfPin.coordinate = self.currentLocation.coordinate;
         [self.mapView addAnnotation:selfPin];
         
-        NSLog(@"updated! %@", _currentLocation);
-        CLLocation *user = [[CLLocation alloc] initWithLatitude:_currentLocation.coordinate.latitude longitude:_currentLocation.coordinate.longitude];
-        if (restaurantCoor.latitude == -180){
-            restaurantCoor.latitude = 0;
+        for (int i = 0; i < friendsGoingID.count; i++) {
+            MKPointAnnotation *pin = [MKPointAnnotation new];
+            pin.coordinate = self.currentLocation.coordinate;
+            [self.mapView addAnnotation:pin];
         }
-        if (restaurantCoor.longitude == -180) {
-            restaurantCoor.longitude = 0;
-        }
-        CLLocation *locale = [[CLLocation alloc] initWithLatitude:restaurantCoor.latitude longitude:restaurantCoor.longitude];
-        CLLocationDistance distance = [user distanceFromLocation:locale];
         
-        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(restaurantCoor, distance*2, distance*2);
-        [self.mapView setRegion:[self.mapView regionThatFits:region] animated:YES];
+        CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
+        if (authorizationStatus == kCLAuthorizationStatusAuthorized ||
+            authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
+            authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+            
+            self.mapView.showsUserLocation = YES;
+            [locationManager startUpdatingLocation];
+            
+        } else {
+            NSLog(@"or nah");
+        }
         
         self.winningRestaurantLabel.text = _currentLobby.winnerRestName;
         
@@ -931,6 +1010,11 @@ typedef enum accessType
         RSVPFriendsTableViewCell *cell = (RSVPFriendsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
         cell.leftUtilityButtons = [self leftButtons];
         cell.rightUtilityButtons = [self rightButtons];
+        
+        cell.extraLabel.userInteractionEnabled = YES;
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFriendsGoing)];
+        [cell.extraLabel addGestureRecognizer:recognizer];
+        
         if (!_imagesRemoved) {
             [cell.firstImage setImage:nil];
             [cell.secondImage setImage:nil];
@@ -987,7 +1071,29 @@ typedef enum accessType
         _rsvpCell = cell;
         return cell;
     }
+    
+    if([tableView isEqual:tableFriendsGoing]) {
+        static NSString *cellIdentifier = @"MyCustomCell";
+        UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+        
+        cell.textLabel.text = @"dope";
+        
+        return cell;
+    }
+    
     return 0;
+}
+
+-(void) showFriendsGoing {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Friends Going" message:@"Here are all the people that are coming! \n\n\n\n "delegate:self  cancelButtonTitle:@"Okay"
+                                          otherButtonTitles:nil];
+    
+    tableFriendsGoing = [[UITableView alloc] initWithFrame:CGRectMake(10, 40, 264, 120)];
+    tableFriendsGoing.delegate = self;
+    tableFriendsGoing.dataSource = self;
+    [alert addSubview:tableFriendsGoing];
+    
+    [alert show];
 }
 
 - (UIImage *)resizeImage:(UIImage*)image newSize:(CGSize)newSize {

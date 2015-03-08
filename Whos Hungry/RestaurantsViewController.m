@@ -294,11 +294,11 @@
         [_allPlaces removeObjectAtIndex:0];
 
     [_allPlaces insertObject:self.customRestaurant atIndex:0];
-    for (int i = 0; i < self.tickedIndexPaths.count; i++) {
+    /*for (int i = 0; i < self.tickedIndexPaths.count; i++) {
         NSIndexPath *path = self.tickedIndexPaths[i];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:path.row+1 inSection:0];
         [self.tickedIndexPaths replaceObjectAtIndex:i withObject:indexPath];
-    }
+    }*/
     [self.tickedIndexPaths addObject:[NSIndexPath indexPathForRow:0 inSection:0]];
     [self.restaurantsTable reloadData];
 }

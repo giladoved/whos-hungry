@@ -609,7 +609,7 @@
                                             <constraint firstItem="L25-Sp-Mwr" firstAttribute="top" secondItem="wxh-XQ-Ebw" secondAttribute="top" id="usG-YV-nDX"/>
                                         </constraints>
                                     </view>
-                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="YZk-ix-yRO" userLabel="Map View - restaurant map">
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YZk-ix-yRO" userLabel="Map View - restaurant map">
                                         <rect key="frame" x="0.0" y="117" width="600" height="483"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="483" id="xsg-iM-16V"/>
