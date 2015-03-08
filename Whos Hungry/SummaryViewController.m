@@ -450,7 +450,7 @@ typedef enum accessType
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
     NSLog(@"distance::::: %f", distanceSinceLastUpdate);
-    //if (distanceSinceLastUpdate > 200 || distanceSinceLastUpdate == 0) {
+    if (distanceSinceLastUpdate > 200 || distanceSinceLastUpdate == 0) {
         NSLog(@"updated! %@", userLocation);
         
         for (int i = 0; i < friendsGoingID.count; i++) {
@@ -463,8 +463,8 @@ typedef enum accessType
                 NSLog(@"Updated Location! %@", responseObject);
                 NSDictionary *results = (NSDictionary *) responseObject;
                 MKPointAnnotation *pin = (MKPointAnnotation *)friendsPins[i];
-                CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(results[@"location_x"],results[@"location_y"]);
-                pin.coordinate = coord;
+                //CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(results[@"location_x"],results[@"location_y"]);
+                //pin.coordinate = coord;
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"Error: %@", error);
             }];
@@ -490,7 +490,7 @@ typedef enum accessType
             NSLog(@"Error: %@", error);
         }];
         distanceSinceLastUpdate = 1;
-    //}
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error{
