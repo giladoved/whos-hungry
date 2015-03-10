@@ -251,8 +251,16 @@ typedef enum accessType
     for (int i = 0; i < _voteStatusArray.count; i++) {
         NSLog(@"before status %d is %@", i, _voteStatusArray[i]);
     }
-    _voteStatusArray[sender.index] = sender.state;
-    _totalVoteArray[sender.index] = @(sender.votes);
+    
+    if (sender.index >= _voteStatusArray.count)
+        [_voteStatusArray addObject:sender.state];
+    else
+        [_voteStatusArray replaceObjectAtIndex:sender.index withObject:sender.state];
+
+    if (sender.index >= _totalVoteArray.count)
+        [_totalVoteArray addObject:@(sender.votes)];
+    else
+        [_totalVoteArray replaceObjectAtIndex:sender.index withObject:@(sender.votes)];
     [sender enableDisable];
     
     for (int i = 0; i < _voteStatusArray.count; i++) {
