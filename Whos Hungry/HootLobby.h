@@ -29,6 +29,7 @@
 @property (strong, nonatomic) NSDate* meetingTime;
 @property (strong, nonatomic) NSString* voteType;
 @property (strong, nonatomic) NSNumber* voteid;
+@property (strong, nonatomic) NSNumber* goingCount;
 
 @property (strong, nonatomic) NSString* winnerRestID;
 @property (strong, nonatomic) NSString* winnerRestName;

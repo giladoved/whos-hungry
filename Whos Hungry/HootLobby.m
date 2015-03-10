@@ -27,6 +27,7 @@
     [encoder encodeObject:_placesYArray forKey:@"placesYArray"];
     [encoder encodeObject:_voteType forKey:@"voteType"];
     [encoder encodeObject:_voteid forKey:@"voteid"];
+    [encoder encodeObject:_goingCount forKey:@"goingCount"];
     [encoder encodeObject:_winnerRestID forKey:@"winnerRestID"];
     [encoder encodeObject:_winnerRestName forKey:@"winnerRestName"];
     [encoder encodeObject:_winnerRestPic forKey:@"winnerRestPic"];
@@ -56,6 +57,7 @@
         _placesYArray = [decoder decodeObjectForKey:@"placesYArray"];
         _voteType = [decoder decodeObjectForKey:@"voteType"];
         _voteid = [decoder decodeObjectForKey:@"voteid"];
+        _goingCount = [decoder decodeObjectForKey:@"goingCount"];
         _winnerRestID = [decoder decodeObjectForKey:@"winnerRestID"];
         _winnerRestName = [decoder decodeObjectForKey:@"winnerRestName"];
         _winnerRestPic = [decoder decodeObjectForKey:@"winnerRestPic"];
@@ -90,6 +92,7 @@
         [copy setPlacesYArray:self.placesYArray];
         [copy setVoteType:self.voteType];
         [copy setVoteid:self.voteid];
+        [copy setGoingCount:self.goingCount];
         [copy setWinnerRestID:self.winnerRestID];
         [copy setWinnerRestName:self.winnerRestName];
         [copy setWinnerRestPic:self.winnerRestPic];

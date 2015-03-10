@@ -73,8 +73,8 @@ typedef enum accessType {
 -(void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self addImageOnTopOfTheNavigationBar];
-    //if (_voteType == nil)
-        //[self lunchBtnPressed:nil];
+    if (_voteType == nil)
+        [self lunchBtnPressed:nil];
 }
 
 - (void) viewWillDisappear:(BOOL)animated{

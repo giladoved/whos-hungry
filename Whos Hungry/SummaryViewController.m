@@ -22,7 +22,7 @@ static NSString * const BaseURLString = @"http://54.215.240.73:3000/";
 #define GOOGLE_API_KEY_FOUR @"AIzaSyDF0gj_1xGofM8BriMNH-uHbNYBVjI3g70"
 
 
-@interface SummaryViewController (){
+@interface SummaryViewController () {
     CLLocationCoordinate2D restaurantCoor;
     CLLocationCoordinate2D userCoor;
     int votedIndex;
@@ -38,7 +38,6 @@ static NSString * const BaseURLString = @"http://54.215.240.73:3000/";
     HootLobby *lobby;
     BOOL isAdmin;
     
-    UITableView *tableFriendsGoing;
     NSMutableArray *friendsGoingID;
     NSMutableArray *friendsPins;
 
@@ -104,7 +103,7 @@ typedef enum accessType
     NSLog(@"currnet loggy: %@", _currentLobby);
     
     _totalVoteArray = [[NSMutableArray alloc] initWithObjects:@0,@0,@0,nil]; //max number of restaurants able to be chosen (3 places)
-    _voteStatusArray = [[NSMutableArray alloc] initWithObjects:@0,@0,@0,nil];
+    _voteStatusArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",nil];
     friendsGoingID = [NSMutableArray new];
     friendsPins = [NSMutableArray new];
     
@@ -145,7 +144,8 @@ typedef enum accessType
     
     [self setSummaryTitle];
     
-
+    if (_voteStatusArray == nil)
+        _voteStatusArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",nil];
     
     //Get picture of user
     /***************************************************************************************/
@@ -180,27 +180,6 @@ typedef enum accessType
     
     //Map initialization and authorization
     /***************************************************************************************/
-    
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    locationManager.pausesLocationUpdatesAutomatically = NO;
-    locationManager.activityType = CLActivityTypeFitness;
-    locationManager.distanceFilter = 200.0f; //meters, avg city block length
-    locationManager.activityType = CLActivityTypeAutomotiveNavigation;
-    [locationManager startMonitoringSignificantLocationChanges];
-    
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
-        [locationManager requestWhenInUseAuthorization];
-        [locationManager requestAlwaysAuthorization];
-    }
-    
-    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
-    if (authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
-        authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        [locationManager startUpdatingLocation];
-    }
-
     self.mapView.delegate = self;
 
     
@@ -234,7 +213,7 @@ typedef enum accessType
     viewload = YES;
 }
 
--(void) loadVotes {
+/*-(void) loadVotes {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     NSLog(@"vote id of show single vote is %@", _currentLobby.voteid);
     NSDictionary *params = @{@"vote_id": _currentLobby.voteid};
@@ -249,16 +228,16 @@ typedef enum accessType
         if (_totalVoteArray.count == 0) {
             NSArray *arr = @[@(0), @(0), @(0)];
             _totalVoteArray = [arr copy];
+            _voteStatusArray = [arr copy];
         }
-        
+
         [_restaurantTable reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         {
             NSLog(@"FUCK DIS SHIT!");
         }
     }];
-
-}
+}*/
 
 -(void) makeVote:(NSNotification *)note {
     NSLog(@"making vote!!" );
@@ -268,6 +247,13 @@ typedef enum accessType
     if (theData != nil) {
         sender = (UpDownVoteView *)[theData objectForKey:@"sender"];
     }
+    
+    for (int i = 0; i < _voteStatusArray.count; i++) {
+        NSLog(@"status %d is %@", i, _voteStatusArray[i]);
+    }
+    _voteStatusArray[sender.index] = sender.status;
+    _totalVoteArray[sender.index] = @(sender.votes);
+    [sender enableDisable];
     
     NSLog(@"restaurant list ids: %@", _currentLobby.placesIdArray);
     NSLog(@"voted restaurant id : %@", _currentLobby.placesIdArray[sender.index]);
@@ -311,7 +297,6 @@ typedef enum accessType
 
 - (IBAction)goHome:(id)sender {
     [locationManager stopUpdatingLocation];
-    [locationManager stopMonitoringSignificantLocationChanges];
     [self.theTimer invalidate];
     self.theTimer = nil;
 
@@ -339,14 +324,14 @@ typedef enum accessType
 }
 
 -(void) saveVotingPrefs {
-    _voteStatusArray = [NSMutableArray new];
+    /*_voteStatusArray = [NSMutableArray new];
     _totalVoteArray = [NSMutableArray new];
     
     NSArray* tableCellArray = [self cellsForTableView:_restaurantTable];
     for (int i = 0; i < tableCellArray.count; i++) {
         [_totalVoteArray addObject:@([tableCellArray[i] votes])];
         [_voteStatusArray addObject:@([tableCellArray[i] stateInt])];
-    }
+    }*/
     
     //Update array with group ID key
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -406,7 +391,7 @@ typedef enum accessType
             //customPinView.image = [UIImage imageWithImage:selfImage scaledToSize:CGSizeMake(28.0, 28.0)];
         }
         else{
-            customPinView.image = [UIImage imageWithImage:[UIImage imageNamed:@"drinks.png"] scaledToSize:CGSizeMake(30.0, 30.0)];
+            customPinView.image = [UIImage imageWithImage:[UIImage imageNamed:@"circled_owl.png"] scaledToSize:CGSizeMake(30.0, 30.0)];
         }
         customPinView.animatesDrop = NO;
         customPinView.canShowCallout = YES;
@@ -758,13 +743,20 @@ typedef enum accessType
     
     _rsvpCell.arrowButton.enabled = NO;
     
+    
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    
+
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         [locationManager requestWhenInUseAuthorization];
         [locationManager requestAlwaysAuthorization];
+    }
+    
+    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+    if (authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
+        authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        [locationManager startUpdatingLocation];
     }
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -918,7 +910,7 @@ typedef enum accessType
             NSDictionary *results = (NSDictionary *) responseObject;
             NSLog(@"Dictionary %@",results);
             //[self loadVotes];
-            //[self.restaurantTable reloadData];
+            [self.restaurantTable reloadData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"Error: %@", error);
         }];
@@ -989,8 +981,9 @@ typedef enum accessType
                 
                 if (_voteStatusArray && _totalVoteArray && indexPath.row < _voteStatusArray.count && indexPath.row < _totalVoteArray.count) {
                     cell.votes = [_totalVoteArray[indexPath.row] intValue];
-                    cell.stateInt = [_voteStatusArray[indexPath.row] intValue];
                     cell.voteLbl.text = [NSString stringWithFormat:@"%i", cell.votes];
+                    cell.stateInt = [_voteStatusArray[indexPath.row] intValue];
+                    NSLog(@"status: %d", cell.stateInt);
                     [cell enableDisable];
                 } else {
                     cell.voteLbl.text = @"0";
@@ -1003,13 +996,14 @@ typedef enum accessType
             cell.restaurantLabel.text = _currentLobby.placesNamesArray[indexPath.row];
             if (_voteStatusArray && _totalVoteArray && indexPath.row < _voteStatusArray.count && indexPath.row < _totalVoteArray.count) {
                 cell.votes = [_totalVoteArray[indexPath.row] intValue];
-                cell.stateInt = [_voteStatusArray[indexPath.row] intValue];
                 cell.voteLbl.text = [NSString stringWithFormat:@"%i", cell.votes];
+                cell.stateInt = [_voteStatusArray[indexPath.row] intValue];
                 [cell enableDisable];
             } else {
                 cell.voteLbl.text = @"0";
             }
         }
+        
         return cell;
     }
     
@@ -1081,15 +1075,6 @@ typedef enum accessType
         return cell;
     }
     
-    if([tableView isEqual:tableFriendsGoing]) {
-        static NSString *cellIdentifier = @"MyCustomCell";
-        UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
-        
-        cell.textLabel.text = @"dope";
-        
-        return cell;
-    }
-    
     return 0;
 }
 
@@ -1097,10 +1082,14 @@ typedef enum accessType
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Friends Going" message:@"Here are all the people that are coming! \n\n\n\n "delegate:self  cancelButtonTitle:@"Okay"
                                           otherButtonTitles:nil];
     
-    tableFriendsGoing = [[UITableView alloc] initWithFrame:CGRectMake(10, 40, 264, 120)];
-    tableFriendsGoing.delegate = self;
-    tableFriendsGoing.dataSource = self;
-    [alert addSubview:tableFriendsGoing];
+    UILabel *labelOfGoing = [[UILabel alloc] initWithFrame:CGRectMake(10, 40, 264, 120)];
+    labelOfGoing.text = @"Who's Going?";
+    NSMutableString *goingStr = [NSMutableString new];
+    for (int i = 0; i < friendsGoingID.count; i++) {
+         [goingStr appendFormat:@"%@\n", friendsGoingID[i]];
+    }
+    labelOfGoing.text = [goingStr copy];
+    [alert addSubview:labelOfGoing];
     
     [alert show];
 }

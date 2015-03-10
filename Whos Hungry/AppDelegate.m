@@ -44,10 +44,11 @@ typedef enum accessType
     
     ///F36F45
     UIColor *orangeColor = [UIColor colorWithRed:(243/255.0) green:(111/255.0) blue:(69/255.0) alpha:1.0];
+    UIFont *font = [UIFont fontWithName:@"Helvetica-Bold" size:16.0];
     
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setBarTintColor:orangeColor];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor], NSFontAttributeName : font}];
     
     NSDictionary* userInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
     if (userInfo) {
