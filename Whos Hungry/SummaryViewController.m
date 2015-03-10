@@ -268,7 +268,6 @@ typedef enum accessType
     if (theData != nil) {
         sender = (UpDownVoteView *)[theData objectForKey:@"sender"];
     }
-    [sender enableDisable];
     
     NSLog(@"restaurant list ids: %@", _currentLobby.placesIdArray);
     NSLog(@"voted restaurant id : %@", _currentLobby.placesIdArray[sender.index]);
@@ -283,6 +282,7 @@ typedef enum accessType
                              @"status" : sender.status};
     [manager POST:[NSString stringWithFormat:@"%@apis/make_vote", BaseURLString] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"JSON: %@", responseObject);
+        [sender enableDisable];
         [self saveVotingPrefs];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
@@ -708,6 +708,14 @@ typedef enum accessType
 - (IBAction)updateTime:(id)sender {
     //NSLog(@"currnet lobby:%@", _currentLobby);
     //if (_isTimerReadyToBeActivated && _isExpirationUpdated) {
+    NSDate* newDate;
+    double secondsInAMinute = 60;
+    if ([_currentLobby.expirationTime timeIntervalSinceDate:[NSDate date]] / secondsInAMinute > 40) {
+        newDate = [_currentLobby.expirationTime dateByAddingTimeInterval:-60*20];
+    }
+    else{
+        newDate = [_currentLobby.expirationTime dateByAddingTimeInterval:(-60*([_currentLobby.expirationTime timeIntervalSinceDate:[NSDate date]] / secondsInAMinute) / 2)];
+    }
         NSInteger hoursLeft = 0;
         NSInteger minutesLeft = 0;
         NSInteger secondsLeft = 0;
@@ -715,7 +723,7 @@ typedef enum accessType
         NSUInteger unitFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
         NSDateComponents *components = [gregorianCalendar components:unitFlags
                                                             fromDate:[NSDate new]
-                                                              toDate:_currentLobby.expirationTime
+                                                              toDate:newDate
                                                              options:0];
         hoursLeft = components.hour;
         minutesLeft = components.minute; //plus 1 to include the chosen time, plus 0 not t0
@@ -747,6 +755,8 @@ typedef enum accessType
     self.restaurantTable.hidden = YES;
     self.votingCompleteView.hidden = NO;
     self.votingIncompleteView.hidden = YES;
+    
+    _rsvpCell.arrowButton.enabled = NO;
     
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
@@ -943,7 +953,6 @@ typedef enum accessType
 }
 
 
-
 #pragma mark - UIScrollViewDelegate
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -965,8 +974,8 @@ typedef enum accessType
             cell.index = (int)indexPath.row;
         }
         
-        NSLog(@"ALL PLACES: %@", _allPlaces);
-        NSLog(@"places %@", _currentLobby);
+        //NSLog(@"ALL PLACES: %@", _allPlaces);
+        //NSLog(@"places %@", _currentLobby);
         
         if (!_loaded) {
             if (![_currentLobby.placesXArray[indexPath.row] isEqual:[NSNull null]]) {
@@ -974,7 +983,7 @@ typedef enum accessType
                 //CLLocation* placeLocation = [[CLLocation alloc] initWithLatitude:(CLLocationDegrees)[_allPlaces[indexPath.row][@"geometry"][@"location"][@"lat"] doubleValue] longitude:(CLLocationDegrees)[_allPlaces[indexPath.row][@"geometry"][@"location"][@"lng"] doubleValue]];
                 float distance = [placeLocation distanceFromLocation:_currentLocation] / 1609.0;
                 //float distance = 50.0f;
-                NSLog(@"Current row is %d", (int)indexPath.row);
+                //  NSLog(@"Current row is %d", (int)indexPath.row);
                 cell.distanceLabel.text = [NSString stringWithFormat:@"%1.2f mi.",distance];
                 cell.restaurantLabel.text = _currentLobby.placesNamesArray[indexPath.row];
                 

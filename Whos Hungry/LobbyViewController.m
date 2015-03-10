@@ -98,10 +98,10 @@ typedef enum accessType {
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     //[dateComponents setDay:-1];
     NSDate *realWhenDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:_whenDate options:0];
-    double secondsInAMinute = 60;
+    //double secondsInAMinute = 60;
     tempLobby.expirationTime = _whenDate;
     NSLog(@"time before is %@",tempLobby.expirationTime);
-
+    /*
     if ([realWhenDate timeIntervalSinceDate:[NSDate date]] / secondsInAMinute > 40) {
         NSDate *newDate = [tempLobby.expirationTime dateByAddingTimeInterval:-60*20];
         tempLobby.expirationTime = newDate;
@@ -113,7 +113,7 @@ typedef enum accessType {
         tempLobby.expirationTime = newDate;
         NSLog(@"time is %@",tempLobby.expirationTime);
     }
-    
+    */
     if (!tempLobby) {
         tempLobby = [HootLobby new];
         NSLog(@"Current Lobby is empty");
