@@ -102,6 +102,21 @@ typedef enum accessType
     
     NSLog(@"currnet loggy: %@", _currentLobby);
     
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+        [locationManager requestWhenInUseAuthorization];
+        [locationManager requestAlwaysAuthorization];
+    }
+    
+    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+    if (authorizationStatus == kCLAuthorizationStatusAuthorizedAlways ||
+        authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        [locationManager startUpdatingLocation];
+    }
+    
     _totalVoteArray = [[NSMutableArray alloc] initWithObjects:@0,@0,@0,nil]; //max number of restaurants able to be chosen (3 places)
     _voteStatusArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",nil];
     friendsGoingID = [NSMutableArray new];
@@ -931,7 +946,9 @@ typedef enum accessType
             NSDictionary *results = (NSDictionary *) responseObject;
             NSLog(@"Dictionary %@",results);
             //[self loadVotes];
+            [self viewDidLoad];
             [self updateVoteCount:nil];
+            [self.restaurantTable reloadData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"Error: %@", error);
         }];
@@ -1110,7 +1127,7 @@ typedef enum accessType
     labelOfGoing.text = [goingStr copy];
     [alert addSubview:labelOfGoing];
     
-    [alert show];
+    //[alert show];
 }
 
 - (UIImage *)resizeImage:(UIImage*)image newSize:(CGSize)newSize {

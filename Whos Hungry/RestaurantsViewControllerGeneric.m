@@ -321,7 +321,7 @@
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Chosen Restaurant"
                                                     message:[NSString stringWithFormat:@"You chose %@", self.chosenRestaurant.name]
                                                    delegate:self
-                                          cancelButtonTitle:@"OK"
+                                          cancelButtonTitle:@"Ok"
                                           otherButtonTitles:nil];
     [alert show];
 }
