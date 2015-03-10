@@ -999,8 +999,6 @@ typedef enum accessType
                     cell.state = _voteStatusArray[indexPath.row];
                     NSLog(@"status: %d", cell.stateInt);
                     [cell enableDisable];
-                } else {
-                    cell.voteLbl.text = @"0";
                 }
             }
         } else {
@@ -1014,8 +1012,6 @@ typedef enum accessType
                 cell.stateInt = [_voteStatusArray[indexPath.row] intValue];
                 cell.state = _voteStatusArray[indexPath.row];
                 [cell enableDisable];
-            } else {
-                cell.voteLbl.text = @"0";
             }
         }
         

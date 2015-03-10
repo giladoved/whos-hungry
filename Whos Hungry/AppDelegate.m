@@ -26,6 +26,8 @@ typedef enum accessType
 } accessType;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [NewRelicAgent startWithApplicationToken:@"AA5df98f7f3806d10f3305b3c7c240121162952770"];
+    
     [FBLoginView class];
     
     NSLog(@"Registering for push notifications...");

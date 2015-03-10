@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <NewRelicAgent/NewRelic.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
