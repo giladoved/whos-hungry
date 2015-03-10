@@ -249,11 +249,15 @@ typedef enum accessType
     }
     
     for (int i = 0; i < _voteStatusArray.count; i++) {
-        NSLog(@"status %d is %@", i, _voteStatusArray[i]);
+        NSLog(@"before status %d is %@", i, _voteStatusArray[i]);
     }
-    _voteStatusArray[sender.index] = sender.status;
+    _voteStatusArray[sender.index] = sender.state;
     _totalVoteArray[sender.index] = @(sender.votes);
     [sender enableDisable];
+    
+    for (int i = 0; i < _voteStatusArray.count; i++) {
+        NSLog(@"after status %d is %@", i, _voteStatusArray[i]);
+    }
     
     NSLog(@"restaurant list ids: %@", _currentLobby.placesIdArray);
     NSLog(@"voted restaurant id : %@", _currentLobby.placesIdArray[sender.index]);
@@ -863,7 +867,16 @@ typedef enum accessType
 }
 
 - (IBAction)suggestAPlace:(id)sender {
-    [self performSegueWithIdentifier:@"suggestaplace" sender:self];
+    if (self.chosenPlace == nil) {
+        [self performSegueWithIdentifier:@"suggestaplace" sender:self];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Again?"
+                                                                     message:@"You've already suggested a place..."
+                                                                    delegate:self
+                                                           cancelButtonTitle:@"Ok"
+                                                           otherButtonTitles:nil];
+         [alert show];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -910,7 +923,7 @@ typedef enum accessType
             NSDictionary *results = (NSDictionary *) responseObject;
             NSLog(@"Dictionary %@",results);
             //[self loadVotes];
-            [self.restaurantTable reloadData];
+            [self updateVoteCount:nil];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"Error: %@", error);
         }];
@@ -983,6 +996,7 @@ typedef enum accessType
                     cell.votes = [_totalVoteArray[indexPath.row] intValue];
                     cell.voteLbl.text = [NSString stringWithFormat:@"%i", cell.votes];
                     cell.stateInt = [_voteStatusArray[indexPath.row] intValue];
+                    cell.state = _voteStatusArray[indexPath.row];
                     NSLog(@"status: %d", cell.stateInt);
                     [cell enableDisable];
                 } else {
@@ -998,6 +1012,7 @@ typedef enum accessType
                 cell.votes = [_totalVoteArray[indexPath.row] intValue];
                 cell.voteLbl.text = [NSString stringWithFormat:@"%i", cell.votes];
                 cell.stateInt = [_voteStatusArray[indexPath.row] intValue];
+                cell.state = _voteStatusArray[indexPath.row];
                 [cell enableDisable];
             } else {
                 cell.voteLbl.text = @"0";

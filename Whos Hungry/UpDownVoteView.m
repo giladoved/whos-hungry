@@ -14,15 +14,14 @@
     self.stateInt++;
     if (self.stateInt > 1)
         self.stateInt = 1;
-    if (self.stateInt == 0) {
+    
+    if (self.stateInt == 0 || self.stateInt == 1)
         self.votes++;
-        self.upBtn.enabled = YES;
-        self.downBtn.enabled = YES;
-    } else if (self.stateInt == 1) {
-        self.upBtn.enabled = NO;
-        self.downBtn.enabled = YES;
-        self.votes++;
-    }
+    
+    self.state = [NSString stringWithFormat:@"%d", self.stateInt];
+    
+    [self enableDisable];
+    
     self.status = @"+1";
     self.voteLbl.text = [NSString stringWithFormat:@"%i", self.votes];
     
@@ -35,15 +34,14 @@
     self.stateInt--;
     if (self.stateInt < -1)
         self.stateInt = -1;
-    if (self.stateInt == -1) {
-        self.upBtn.enabled = YES;
-        self.downBtn.enabled = NO;
+    
+    if (self.stateInt == -1 || self.stateInt == 0)
         self.votes--;
-    } else if (self.stateInt == 0) {
-        self.upBtn.enabled = YES;
-        self.downBtn.enabled = YES;
-        self.votes--;
-    }
+
+    self.state = [NSString stringWithFormat:@"%d", self.stateInt];
+    
+    [self enableDisable];
+    
     self.status = @"-1";
     self.voteLbl.text = [NSString stringWithFormat:@"%i", self.votes];
     NSDictionary *dataDict = [NSDictionary dictionaryWithObject:self
@@ -63,13 +61,13 @@
         self.downBtn.enabled = YES;
     }
     
-    if ([self.status isEqualToString:@"-1"]) {
+    if ([self.state isEqualToString:@"-1"]) {
         self.upBtn.enabled = YES;
         self.downBtn.enabled = NO;
-    } else if ([self.status isEqualToString:@"0"]) {
+    } else if ([self.state isEqualToString:@"0"]) {
         self.upBtn.enabled = YES;
         self.downBtn.enabled = YES;
-    } else if ([self.status isEqualToString:@"1"]) {
+    } else if ([self.state isEqualToString:@"1"]) {
         self.upBtn.enabled = NO;
         self.downBtn.enabled = YES;
     }
